@@ -5,22 +5,33 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   apiAuthPrefix,
   authRoutes,
+  isMagicLinkCheckerMethod,
   publicRoutes,
 } from "@/routes";
 const { auth } = NextAuth(authConfig);
 export default auth((req: any) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isApiAuthRoute = apiAuthPrefix.some((self) =>
+    nextUrl.pathname.startsWith(self)
+  );
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+  const isMagicLinkRoute = isMagicLinkCheckerMethod(nextUrl.pathname);
+  console.log("magic payload", {
+    pathname: nextUrl.pathname,
+    origin: nextUrl.origin,
+  });
+
+  console.log("isMagicLinkRoute >>>>>>>>>>> ", isMagicLinkRoute);
   if (isApiAuthRoute) return;
   if (isAuthRoute) {
     if (isLoggedIn)
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     return;
   }
-  if (!isLoggedIn && !isPublicRoute)
+  if (!isLoggedIn && !isPublicRoute && !isMagicLinkRoute)
     return Response.redirect(new URL("/auth/login", nextUrl));
   // req.auth
 });

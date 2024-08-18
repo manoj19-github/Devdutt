@@ -16,18 +16,18 @@ export default {
       clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET as string,
     }),
     Credentials({
-      // async authorize(credentials) {
-      //   console.log("credentials: ", credentials);
-      //   // const validatedFields = LoginSchema.safeParse(credentials);
-      //   // if (validatedFields.success) {
-      //   //     const { email, password } = validatedFields.data;
-      //   //     const user = await getUserByEmail(email);
-      //   //     console.log("user   config: ", user);
-      //   //     if (!user) return null;
-      //   //     return user;
-      //   // }
-      //   return credentials;
-      // },
+      async authorize(credentials) {
+        console.log("credentials: ", credentials);
+        const validatedFields = LoginSchema.safeParse(credentials);
+        if (validatedFields.success) {
+          const { email, password } = validatedFields.data;
+          const user = await getUserByEmail(email);
+          console.log("user   config: ", user);
+          if (!user) return null;
+          return user;
+        }
+        return null;
+      },
     }),
   ],
 } satisfies NextAuthConfig;

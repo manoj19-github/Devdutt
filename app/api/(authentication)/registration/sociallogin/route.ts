@@ -1,11 +1,16 @@
 import { NextResponse } from "next/server";
-import { dbConfig } from "../../_config/db.config";
-import { log } from "console";
+import { dbConfig } from "../../../../_config/db.config";
+
 export async function GET(request: Request) {
-  return NextResponse.json({
-    message: "Login Successfull",
-    status: true,
-  });
+  return NextResponse.json(
+    {
+      message: "Login Successfull",
+      success: true,
+    },
+    {
+      status: 200,
+    }
+  );
 }
 
 export async function POST(request: Request) {
@@ -13,7 +18,10 @@ export async function POST(request: Request) {
     const { user, account, profile } = await request.json();
     console.log("API:", { user, account, profile });
     if (!user || !account || !profile)
-      new NextResponse("Invalid type", { status: 400 });
+      return NextResponse.json(
+        { message: "invalid user input ", success: false },
+        { status: 400 }
+      );
 
     // Check if user already exists or not
     const isUserExists = await dbConfig.user.findFirst({
@@ -31,19 +39,15 @@ export async function POST(request: Request) {
         },
       });
       if (!!isAccountExists) {
-        console.log("is account exists   >>>>>>>>> ", {
-          message: "Login Successfull",
-          account: isAccountExists,
-          user: isUserExists,
-          status: true,
-        });
-
-        return NextResponse.json({
-          message: "Login Successfull",
-          account: isAccountExists,
-          user: isUserExists,
-          status: true,
-        });
+        return NextResponse.json(
+          {
+            message: "Login Successfull",
+            account: isAccountExists,
+            user: isUserExists,
+            success: true,
+          },
+          { status: 200 }
+        );
       } else {
         const newAccount = await dbConfig.account.create({
           data: {
@@ -59,12 +63,15 @@ export async function POST(request: Request) {
             type: account.type,
           },
         });
-        return NextResponse.json({
-          message: "Login Successfull",
-          status: true,
-          account: newAccount,
-          user: isUserExists,
-        });
+        return NextResponse.json(
+          {
+            message: "Login Successfull",
+            success: true,
+            account: newAccount,
+            user: isUserExists,
+          },
+          { status: 200 }
+        );
       }
     } else if (account) {
       const newUser = await dbConfig.user.create({
@@ -89,21 +96,30 @@ export async function POST(request: Request) {
           type: account.type,
         },
       });
-      return NextResponse.json({
-        message: "Login Successfull",
-        status: true,
-        account: newAccount,
-        user: newUser,
-      });
+      return NextResponse.json(
+        {
+          message: "Login Successfull",
+          success: true,
+          account: newAccount,
+          user: newUser,
+        },
+        { status: 200 }
+      );
     }
-    return NextResponse.json({
-      message: "Login Successfull",
-      status: true,
-      account: account,
-      user: user,
-    });
+    return NextResponse.json(
+      {
+        message: "Login Successfull",
+        success: true,
+        account: account,
+        user: user,
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.log("error: ", error);
-    return new NextResponse("Internal Error ", { status: 500 });
+    return NextResponse.json(
+      { message: "Internal Error ", success: false },
+      { status: 500 }
+    );
   }
 }

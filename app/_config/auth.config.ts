@@ -3,7 +3,9 @@ import Github from "next-auth/providers/github";
 import authConfig from "./nextAuth.config";
 
 import { dbConfig } from "./db.config";
-import { socialSignEntryAction } from "../serverActions/auth";
+// import { socialSignEntryAction } from "../serverActions/auth";
+import { linkAccountService, socialLoginService } from "../_services//auth.service";
+
 import { UserRole } from "@prisma/client";
 // import {
 //   getUserByEmail,
@@ -23,12 +25,7 @@ export const {
   },
   events: {
     async linkAccount({ user }) {
-      //   await dbConfig.user.update({
-      //     where: {
-      //       id: user.id,
-      //     },
-      //     data: { emailVerified: new Date() },
-      //   });
+      await linkAccountService(user)
     },
   },
   callbacks: {
@@ -44,32 +41,7 @@ export const {
     async signIn({ user, account, profile }) {
       console.log("SIGN IN DATA : ", { user, account, profile });
       try {
-        // const res = await socialSignEntryAction({ user, account, profile });
-        // console.log("res: ", res);
-        // if (!res) return false;
-        console.log(
-          "hit api ",
-          `${process.env.NEXT_PUBLIC_CURRENT_ORIGIN}/api/sociallogin`
-        );
-        console.log(
-          "JSON.stringify({ user, account, profile }), ",
-          JSON.stringify({ user, account, profile })
-        );
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_CURRENT_ORIGIN}/api/sociallogin`,
-          {
-            method: "POST",
-            body: JSON.stringify({ user, account, profile }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // const data = await response.json();
-        // console.log("data: ", data);
-        // if (data) return true;
+       const response = await socialLoginService({ user, account, profile });
         return true;
       } catch (error) {
         console.log("error in sign in : ", error);

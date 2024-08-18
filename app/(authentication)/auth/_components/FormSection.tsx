@@ -1,5 +1,6 @@
 "use client";
 import { signIn } from "@/app/_config/auth.config";
+import { sendMailForMagicLinkService } from "@/app/_services/auth.service";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { DEFAULT_LOGIN_REDIRECT } from "@/environment";
 import Typography from "@/lib/Typography";
 import { useAPPLoader } from "@/store/useAPPLoader";
+import { LoginSchema } from "@/validationSchema/auth.schema";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Provider } from "@supabase/supabase-js";
@@ -26,12 +28,9 @@ import { z } from "zod";
 type FormSectionProps = {};
 const FormSection: FC<FormSectionProps> = (): JSX.Element => {
   const { startLoader, stopLoader } = useAPPLoader();
-  const formSchema = z.object({
-    email: z.string().email({ message: "Please enter a valid email address" }),
-  });
 
-  const FormHandler = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const FormHandler = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
     },
@@ -39,22 +38,12 @@ const FormSection: FC<FormSectionProps> = (): JSX.Element => {
   const onSubmitHandler = async (values: any) => {
     console.log(values);
     startLoader();
-    // const response = await registerWithEmail(values);
-    // if (!!response) {
-    //   const parsedResponse = JSON.parse(response);
-    // }
+    const response = await sendMailForMagicLinkService(values);
+    console.log("response: ", response);
     stopLoader();
-  };
-  const socialAuth = async (provider: Provider) => {
-    try {
-      startLoader();
-      signIn("credentials", { redirectTo: DEFAULT_LOGIN_REDIRECT });
-    } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
-    } finally {
-      stopLoader();
-    }
+    if (response && response.success) toast.success(response.message);
+    else if (response && !response.success) toast.error(response.message);
+    else toast.error("Something went wrong");
   };
   return (
     <Form {...FormHandler}>
