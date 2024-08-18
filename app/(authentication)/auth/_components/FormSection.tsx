@@ -1,4 +1,6 @@
 "use client";
+import { signIn } from "@/app/_config/auth.config";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,15 +11,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { DEFAULT_LOGIN_REDIRECT } from "@/environment";
 import Typography from "@/lib/Typography";
+import { useAPPLoader } from "@/store/useAPPLoader";
+
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Provider } from "@supabase/supabase-js";
 import React, { FC, Fragment, useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
+import toast from "react-hot-toast";
 import { MdOutlineAutoAwesome } from "react-icons/md";
 import { z } from "zod";
 
 type FormSectionProps = {};
 const FormSection: FC<FormSectionProps> = (): JSX.Element => {
+  const { startLoader, stopLoader } = useAPPLoader();
   const formSchema = z.object({
     email: z.string().email({ message: "Please enter a valid email address" }),
   });
@@ -28,8 +36,25 @@ const FormSection: FC<FormSectionProps> = (): JSX.Element => {
       email: "",
     },
   });
-  const onSubmitHandler = (values: any) => {
+  const onSubmitHandler = async (values: any) => {
     console.log(values);
+    startLoader();
+    // const response = await registerWithEmail(values);
+    // if (!!response) {
+    //   const parsedResponse = JSON.parse(response);
+    // }
+    stopLoader();
+  };
+  const socialAuth = async (provider: Provider) => {
+    try {
+      startLoader();
+      signIn("credentials", { redirectTo: DEFAULT_LOGIN_REDIRECT });
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    } finally {
+      stopLoader();
+    }
   };
   return (
     <Form {...FormHandler}>

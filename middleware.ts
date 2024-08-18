@@ -1,20 +1,31 @@
-import { NextRequest } from "next/server";
-import { updateSession } from "./supabase/supabaseMiddleware";
+// import { auth } from "./auth";
+import NextAuth from "next-auth";
+import authConfig from "./app/_config/nextAuth.config";
+import {
+  DEFAULT_LOGIN_REDIRECT,
+  apiAuthPrefix,
+  authRoutes,
+  publicRoutes,
+} from "@/routes";
+const { auth } = NextAuth(authConfig);
+export default auth((req: any) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  if (isApiAuthRoute) return;
+  if (isAuthRoute) {
+    if (isLoggedIn)
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    return;
+  }
+  if (!isLoggedIn && !isPublicRoute)
+    return Response.redirect(new URL("/auth/login", nextUrl));
+  // req.auth
+});
 
-export async function middleware(request: NextRequest) {
-  // update user's auth session
-  return await updateSession(request);
-}
-
+// Optionally, don't invoke Middleware on some paths
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
 };

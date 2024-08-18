@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Typography from "@/lib/Typography";
 import React, { FC, Fragment } from "react";
@@ -6,9 +7,20 @@ import { RxGithubLogo } from "react-icons/rx";
 import Image from "next/image";
 import FormSection from "./FormSection";
 import { VscAccount } from "react-icons/vsc";
-
+import { useAPPLoader } from "@/store/useAPPLoader";
+import { Provider } from "@supabase/supabase-js";
+import toast from "react-hot-toast";
+import { signIn } from "next-auth/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/environment";
+import { SocialSignAction } from "@/app/serverActions/auth";
 type LoginFormProps = {};
 const LoginForm: FC<LoginFormProps> = (): JSX.Element => {
+  const { startLoader, stopLoader } = useAPPLoader();
+  const socialAuth = async (provider: string) => {
+    startLoader();
+    SocialSignAction(provider);
+    stopLoader();
+  };
   return (
     <Fragment>
       <div className="flex justify-center items-center gap-4 mb-4 ">
@@ -40,13 +52,21 @@ const LoginForm: FC<LoginFormProps> = (): JSX.Element => {
           We suggest using the email address that you use at work
         </Typography>
         <div className="flex flex-col space-y-4 mt-4">
-          <Button variant={"outline"} className="py-5 border-2 flex space-x-4">
+          <Button
+            variant={"outline"}
+            className="py-5 border-2 flex space-x-4"
+            onClick={() => socialAuth("google")}
+          >
             <FcGoogle size={25} />
             <Typography className="text-xl" component={"p"}>
               Sign in with Google
             </Typography>
           </Button>
-          <Button variant={"outline"} className="py-5 border-2 flex space-x-4">
+          <Button
+            variant={"outline"}
+            className="py-5 border-2 flex space-x-4"
+            onClick={() => socialAuth("github")}
+          >
             <RxGithubLogo size={25} />
             <Typography className="text-xl" component={"p"}>
               Sign in with Github
