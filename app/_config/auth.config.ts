@@ -41,6 +41,7 @@ export const {
     async signIn({ user, account, profile }) {
       console.log("SIGN IN DATA : ", { user, account, profile });
       try {
+        if (!!account && account.provider === "credentials") return true;
        const response = await socialLoginService({ user, account, profile });
         return true;
       } catch (error) {

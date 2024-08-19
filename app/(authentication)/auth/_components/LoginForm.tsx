@@ -12,6 +12,7 @@ import { Provider } from "@supabase/supabase-js";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/environment";
+import { SocialSignAction } from "@/app/serverActions/auth.serverAction";
 
 type LoginFormProps = {};
 const LoginForm: FC<LoginFormProps> = (): JSX.Element => {

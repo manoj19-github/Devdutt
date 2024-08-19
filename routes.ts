@@ -22,10 +22,16 @@ export const authRoutes = ["/auth/login", "/auth/register", "/auth/error"];
  *  **/
 export const apiAuthPrefix = ["/api/auth","/api/registration"];
 /***
- * Ther default redirect path after user logged in
+ * The default redirect path after user logged in
  * @type {string}
  * ***/
 export const DEFAULT_LOGIN_REDIRECT = "/";
+
+/***
+ * The default redirect path after user credentails login
+ * @type {string}
+ * ***/
+export const DEFAULT_CREDENTIALS_LOGIN_REDIRECT = "/userinfo";
 
 
 export function isMagicLinkCheckerMethod( 

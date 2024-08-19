@@ -19,12 +19,7 @@ export default auth((req: any) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   const isMagicLinkRoute = isMagicLinkCheckerMethod(nextUrl.pathname);
-  console.log("magic payload", {
-    pathname: nextUrl.pathname,
-    origin: nextUrl.origin,
-  });
 
-  console.log("isMagicLinkRoute >>>>>>>>>>> ", isMagicLinkRoute);
   if (isApiAuthRoute) return;
   if (isAuthRoute) {
     if (isLoggedIn)
