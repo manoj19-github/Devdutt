@@ -3,9 +3,13 @@
 import { DEFAULT_CREDENTIALS_LOGIN_REDIRECT } from "@/routes";
 import { signIn } from "../_config/auth.config";
 import { dbConfig } from "../_config/db.config";
-import { LoginSchema } from "@/validationSchema/auth.schema";
+import {
+  LoginSchema,
+  UpdateProfileSchema,
+} from "@/validationSchema/auth.schema";
 import { AuthError } from "next-auth";
-
+import { revalidatePath } from "next/cache";
+import * as zod from "zod";
 export async function emailLoginServerAction({
   userEmail,
 }: {
@@ -62,5 +66,26 @@ export const SocialSignAction = async (provider: string) => {
       }
     }
     throw error;
+  }
+};
+
+export const updateOwnUserDetailsServerAction = async (
+  data: zod.infer<typeof UpdateProfileSchema>
+) => {
+  // console.log("data: ", data);
+  try {
+    const { email, name, image } = data;
+    const user = await dbConfig.user.update({
+      where: {
+        email,
+      },
+      data: {
+        name,
+        image,
+      },
+    });
+    revalidatePath("/");
+  } catch (error) {
+    console.log("error: ", error);
   }
 };

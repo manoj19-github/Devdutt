@@ -63,13 +63,9 @@ export const {
     },
     async jwt({ token, user }) {
       // console.log("token in jwt : ", token);
-      if (!token || !token.email) return token;
+    return token;
 
-      // const existingUser = await getUserByEmail(token.email);
-      // if (!existingUser) return token;
-      // token.role = existingUser.role;
-
-      return token;
+    
     },
   },
   // adapter: PrismaAdapter(dbConfig) as any,

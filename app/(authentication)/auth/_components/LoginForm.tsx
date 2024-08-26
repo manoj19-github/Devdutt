@@ -22,6 +22,14 @@ const LoginForm: FC<LoginFormProps> = (): JSX.Element => {
     SocialSignAction(provider);
     stopLoader();
   };
+  const credentialsLogin = async (email: string) => {
+    startLoader();
+    await signIn("credentials", {
+      email,
+      redirectTo: "/",
+    });
+    stopLoader();
+  };
   return (
     <Fragment>
       <div className="flex justify-center items-center gap-4 mb-4 ">
@@ -75,11 +83,19 @@ const LoginForm: FC<LoginFormProps> = (): JSX.Element => {
           </Button>
           <Button variant={"outline"} className="py-5 border-2 flex space-x-4">
             <VscAccount size={25} />
-            <Typography className="text-xl" component={"p"}>
+            <Typography
+              className="text-xl"
+              component={"p"}
+              onClick={() => credentialsLogin("santramanoj1997@gmail.com")}
+            >
               Sign in with Test1 User
             </Typography>
           </Button>
-          <Button variant={"outline"} className="py-5 border-2 flex space-x-4">
+          <Button
+            variant={"outline"}
+            className="py-5 border-2 flex space-x-4"
+            onClick={() => credentialsLogin("santramanoj201@gmail.com")}
+          >
             <VscAccount size={25} />
             <Typography className="text-xl" component={"p"}>
               Sign in with Test2 User
