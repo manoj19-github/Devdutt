@@ -27,9 +27,10 @@ model Account {
     id_token String? @db.String
     session_state String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+    @@index([userId])
 }
 
 enum UserRole{
@@ -48,7 +49,52 @@ model User{
   updatedAt DateTime @updatedAt
   accounts Account[]
   password String?
+  channels String?
+  is_away Boolean @default(false)
+  is_online Boolean @default(false)
+  is_busy Boolean @default(false)
+  is_muted Boolean @default(false)
+  is_deaf Boolean @default(false)
+  is_streaming Boolean @default(false)
+  is_mobile Boolean @default(false)
+  is_desktop Boolean @default(false)
+  is_tablet Boolean @default(false)
+  is_mobile_device Boolean @default(false)
+  is_desktop_device Boolean @default(false)
+  is_tablet_device Boolean @default(false)
+  is_mobile_browser Boolean @default(false)
+  is_desktop_browser Boolean @default(false)
+  type String?
+  workspaces Workspaces[]
+
   role UserRole @default(USER)
+}
+
+model Channel{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  type String
+  workspaceId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  workspace Workspaces @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  @@index([workspaceId])
+  
+}
+
+model Workspaces{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  avatar String?
+  userId String @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  invite_code String?
+  slug_code String?
+  regulator String?
+  super_admin String? @db.ObjectId
+  members User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channels Channel[]
 }
 
 model VerificationToken{

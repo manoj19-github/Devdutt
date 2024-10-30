@@ -5,7 +5,7 @@
  *
  * ***/
 
-export const publicRoutes: string[] = ["/"];
+export const publicRoutes: string[] = [];
 
 /****
  * An array of routes thatr are used for authentication

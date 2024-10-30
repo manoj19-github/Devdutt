@@ -1,7 +1,7 @@
 "use server";
 
 import { DEFAULT_CREDENTIALS_LOGIN_REDIRECT } from "@/routes";
-import { signIn } from "../_config/auth.config";
+import { auth, signIn } from "../_config/auth.config";
 import { dbConfig } from "../_config/db.config";
 import {
   LoginSchema,
@@ -87,5 +87,34 @@ export const updateOwnUserDetailsServerAction = async (
     revalidatePath("/");
   } catch (error) {
     console.log("error: ", error);
+  }
+};
+
+export const getCurrentLoggedInUserServerAction = async () => {
+  try {
+    const loggedInUserDetails = await auth();
+    if (!loggedInUserDetails || !loggedInUserDetails.user)
+      return {
+        message: "User not found",
+        user: null,
+        success: false,
+      };
+    const user = await dbConfig.user.findUnique({
+      where: {
+        email: loggedInUserDetails.user.email ?? "",
+      },
+    });
+    return {
+      message: "User found successfully",
+      user,
+      success: false,
+    };
+  } catch (error) {
+    console.log("error: ", error);
+    return {
+      message: "Something went wrong",
+      user: null,
+      success: false,
+    };
   }
 };

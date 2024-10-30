@@ -14,6 +14,7 @@ interface FileUploadProps {
   endpoint: "messageFile" | "serverImage";
   isLoading: boolean;
   noPreview?: boolean;
+  btnText?: string;
 }
 const FileUpload: FC<FileUploadProps> = ({
   onChange,
@@ -21,6 +22,7 @@ const FileUpload: FC<FileUploadProps> = ({
   endpoint,
   isLoading,
   noPreview,
+  btnText,
 }): JSX.Element => {
   console.log("value >>>>>>>>>>>>>>>>>>>> ", value);
   const fileRef = useRef();
@@ -88,12 +90,11 @@ const FileUpload: FC<FileUploadProps> = ({
       <UploadButton
         content={{
           button({ ready }) {
-            if (ready) return <div>Upload photo</div>;
+            if (ready) return <div>{btnText || `Upload photo`}</div>;
             return "Uploading ...";
           },
         }}
         endpoint={endpoint}
-        onChange={() => startLoader()}
         onClientUploadComplete={(res) => onChange(res?.[0].url)}
         onUploadError={(error: any) => {
           toast.error("Error uploading file");
