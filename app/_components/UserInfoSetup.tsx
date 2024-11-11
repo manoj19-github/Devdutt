@@ -5,6 +5,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import {
   RegisterSchema,
@@ -27,6 +28,7 @@ import { updateOwnUserDetailsServerAction } from "../serverActions/auth.serverAc
 type UserInfoSetupProps = {};
 const UserInfoSetup: FC<UserInfoSetupProps> = (): JSX.Element => {
   const session = useSession();
+  console.log("session: ", session);
   const [apiLoading, setApiLoading] = useState<boolean>(false);
   const { message, loading, startLoader, stopLoader } = useAPPLoader();
 
@@ -136,6 +138,7 @@ const UserInfoSetup: FC<UserInfoSetupProps> = (): JSX.Element => {
                           className="w-full"
                         />
                       </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />

@@ -51,6 +51,9 @@ const UserInfo: FC<UserInfoProps> = ({}): JSX.Element => {
     }
   }, [session]);
 
+  console.log("session >>>>>>>>>>>>>>>>>>>> ", session);
+  
+
   return (
     <div className="w-screen h-screen  fixed top-0 left-0 bottom-0 right-0 z-[999]">
       <div className="absolute p-2 top-[45%] left-[45%] ">

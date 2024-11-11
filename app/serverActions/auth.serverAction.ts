@@ -103,6 +103,9 @@ export const getCurrentLoggedInUserServerAction = async () => {
       where: {
         email: loggedInUserDetails.user.email ?? "",
       },
+      include: {
+        workspaces: true,
+      },
     });
     return {
       message: "User found successfully",

@@ -29,9 +29,7 @@ export const RegisterSchema = Z.object({
 });
 
 export const UpdateProfileSchema = Z.object({
-  image: Z.string().min(5, {
-    message: "image must be grater than 5 character",
-  }),
+  image: Z.string().optional(),
   email: Z.string({ invalid_type_error: "Must be a string" })
     .email({
       message: "Email is required",
@@ -41,5 +39,7 @@ export const UpdateProfileSchema = Z.object({
         /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/gm.test(value ?? ""),
       "invalid email"
     ),
-  name: Z.string().min(5, { message: "Name must be grater than 5 character" }),
+  name: Z.string({ invalid_type_error: "Must be a string" }).min(5, {
+    message: "Name must be grater than 5 character",
+  }),
 });

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import Typography from "@/lib/Typography";
 import { useCreateWorkSpaceValues } from "@/store/useCreateWorkSpaceValues";
 import { ChevronLeft } from "lucide-react";
-import React, { FC, Fragment } from "react";
+import React, { FC, FormEventHandler, Fragment } from "react";
 import Image from "next/image";
 import FileUpload from "@/lib/FileUpload";
 import { useAPPLoader } from "@/store/useAPPLoader";
@@ -15,20 +15,37 @@ import toast from "react-hot-toast";
 type CreateWorkspaceStep2Props = {};
 const CreateWorkspaceStep2: FC<CreateWorkspaceStep2Props> = (): JSX.Element => {
   const createWorkStepValues = useCreateWorkSpaceValues();
+  const router = useRouter();
   const appLoader = useAPPLoader();
-  const handleSubmit = async () => {
-    const slug = slugify(createWorkStepValues.name);
-    const invite_code = uuid();
-    appLoader.startLoader();
-    const response = await createWorkSpaceAction({
-      name: createWorkStepValues.name,
-      slug,
-      invite_code,
-      image_url: createWorkStepValues.imageUrl,
-    });
-    appLoader.stopLoader();
-    if (response.success) return toast.success(response.message);
-    toast.error(response.message);
+  const handleSubmit = async (event: any) => {
+    try {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const slug = slugify(createWorkStepValues.name);
+      const invite_code = uuid();
+      appLoader.startLoader();
+      const response = await createWorkSpaceAction({
+        name: createWorkStepValues.name,
+        slug,
+        invite_code,
+        image_url: createWorkStepValues.imageUrl,
+      });
+      console.log("response: ", response);
+      if (response?.success && response?.workspace) {
+        toast.success("Workspace created successfully");
+        router.replace(`/workspace/${response.workspace.id}`);
+      } else {
+        toast.error(`${response?.message || "Error creating workspace"}`);
+      }
+    } catch (error) {
+      // Handle the error here
+      console.error("Error creating workspace:", error);
+      appLoader.stopLoader();
+      toast.error("Error creating workspace");
+    } finally {
+      appLoader.stopLoader();
+    }
   };
   return (
     <div className="">

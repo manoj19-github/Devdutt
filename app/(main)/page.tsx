@@ -11,20 +11,11 @@ export default async function Home() {
   const respo = await getCurrentLoggedInUserServerAction();
   console.log("respo: ", respo);
 
-  if (
-    (!!session && session.user && !session.user.name) ||
-    (!!session && session.user && !session.user.image)
-  )
-    return <UserInfoSetup />;
-  if (
-    !!respo &&
-    respo.user &&
-    respo.user.workplaces &&
-    respo.user.workplaces.length === 0
-  )
+  if (!!session && session.user && !session.user.name) return <UserInfoSetup />;
+  if (!!respo && respo.user && respo.user && respo.user.workspaces.length === 0)
     redirect("/create-workspace");
-  if (!!respo && respo.user && respo.user.workplaces.length >= 1) {
-    redirect(`/workplace/${respo.user.workplaces[0]}`);
+  if (!!respo && respo.user && respo.user.workspaces.length >= 1) {
+    redirect(`/work/${respo.user.workspaces[0].id}`);
   }
 
   return (

@@ -2,6 +2,7 @@
 
 import { auth } from "../_config/auth.config";
 import { dbConfig } from "../_config/db.config";
+import { getCurrentLoggedInUserServerAction } from "./auth.serverAction";
 
 export const createWorkSpaceAction = async ({
   image_url,
@@ -16,7 +17,10 @@ export const createWorkSpaceAction = async ({
 }) => {
   try {
     const session = await auth();
-    if (!session || !session.user)
+    const loggedInUserDetails = await getCurrentLoggedInUserServerAction();
+    console.log("loggedInUserDetails: ", loggedInUserDetails);
+    console.log("session: ", session);
+    if (loggedInUserDetails.user === null)
       return {
         message: "you are not logged in ",
         success: false,
@@ -28,7 +32,7 @@ export const createWorkSpaceAction = async ({
         name,
         slug_code: slug,
         invite_code,
-        userId: session.user.id,
+        userId: loggedInUserDetails.user.id,
       },
     });
     return {

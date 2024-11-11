@@ -25,7 +25,7 @@ const CreateWorkspaceStep1: FC<CreateWorkspaceStep1Props> = (): JSX.Element => {
             value={createWorkStepValues.name}
             placeholder="Enter your workspace name (minimum 3 characters)"
             onChange={(event) =>
-              createWorkStepValues.updateName(event.target.value)
+              createWorkStepValues.updateName(event.target.value?.toLowerCase())
             }
           />
           <Button

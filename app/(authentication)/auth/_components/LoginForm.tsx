@@ -13,6 +13,7 @@ import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import { DEFAULT_LOGIN_REDIRECT } from "@/environment";
 import { SocialSignAction } from "@/app/serverActions/auth.serverAction";
+import { sendMailForMagicLinkService } from "@/app/_services/auth.service";
 
 type LoginFormProps = {};
 const LoginForm: FC<LoginFormProps> = (): JSX.Element => {
@@ -24,11 +25,11 @@ const LoginForm: FC<LoginFormProps> = (): JSX.Element => {
   };
   const credentialsLogin = async (email: string) => {
     startLoader();
-    await signIn("credentials", {
-      email,
-      redirectTo: "/",
-    });
+    const response = await sendMailForMagicLinkService({ email });
     stopLoader();
+    if (response && response.success) toast.success(response.message);
+    else if (response && !response.success) toast.error(response.message);
+    else toast.error("Something went wrong");
   };
   return (
     <Fragment>
