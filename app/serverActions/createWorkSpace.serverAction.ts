@@ -35,6 +35,16 @@ export const createWorkSpaceAction = async ({
         userId: loggedInUserDetails.user.id,
       },
     });
+    await dbConfig.user.update({
+      where: { id: loggedInUserDetails.user.id },
+      data: {
+        workspaces: {
+          connect: {
+            id: workspace.id,
+          },
+        },
+      },
+    });
     return {
       message: "workspace created",
       success: true,

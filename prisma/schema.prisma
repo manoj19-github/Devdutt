@@ -13,6 +13,12 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum MemberRole{
+  ADMIN
+  MODERATOR
+  GUEST
+}
+
 model Account {
   id String @id @default(auto()) @map("_id") @db.ObjectId
     userId String @db.ObjectId
@@ -66,7 +72,7 @@ model User{
   is_desktop_browser Boolean @default(false)
   type String?
   workspaces Workspaces[]
-
+  members Member[]
   role UserRole @default(USER)
 }
 
@@ -75,6 +81,7 @@ model Channel{
   name String
   type String
   workspaceId String @db.ObjectId
+  messages Message[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   workspace Workspaces @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
@@ -91,10 +98,9 @@ model Workspaces{
   updatedAt DateTime @updatedAt
   invite_code String?
   slug_code String?
-  regulator String?
-  super_admin String? @db.ObjectId
-  members User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  users User @relation(fields: [userId], references: [id], onDelete: Cascade)
   channels Channel[]
+  @@index([userId])
 }
 
 model VerificationToken{
@@ -113,4 +119,72 @@ model passwordResetToken{
   expires DateTime
 
   @@unique([email,token])
+}
+
+
+model Member{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  role MemberRole @default(GUEST)
+  userId String @db.ObjectId
+  users User @relation(fields:[userId],references: [id],onDelete:Cascade)
+  messages Message[]
+  directMessage DirectMessage[]
+  conversationsInitiated Conversation[] @relation("MemberOne")
+  conversationsReceived Conversation[] @relation("MemberTwo")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
+enum ChannelType{
+  TEXT
+  AUDIO
+  VIDEOa
+}
+
+
+model Message {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  content String 
+  fileUrl String?
+  memberId String
+  member Member @relation(fields:[memberId],references: [id],onDelete:Cascade) 
+  channelId String
+  channel Channel @relation(fields:[channelId],references: [id],onDelete:Cascade) 
+  deleted Boolean @default(false)
+  @@index([channelId])
+  @@index([memberId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt  
+}
+
+model Conversation{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  memberOneId String
+  memberOne Member @relation("MemberOne",fields:[memberOneId],references:[id],onDelete:Cascade)
+  memberTwoId String
+  memberTwo Member @relation("MemberTwo",fields:[memberTwoId],references:[id],onDelete:Cascade)
+  directMessages DirectMessage[]
+  @@index([memberOneId])
+  @@index([memberTwoId])
+  @@unique([memberOneId,memberTwoId])
+}
+
+model DirectMessage{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  content String
+  fileUrl String?
+  memberId String
+  member Member @relation(fields:[memberId],references: [id],onDelete:Cascade) 
+  conversationId String
+  conversation Conversation @relation(fields:[conversationId],references: [id],onDelete:Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
+  deleted Boolean @default(false)
+
+  @@index([memberId])
+  @@index([conversationId])
+  
+  
+
 }

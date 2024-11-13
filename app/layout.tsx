@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/providers/ThemeProvider";
 import ToasterProvider from "@/providers/ToasterProvider";
 import PageLoader from "@/components/PageLoader";
 import { SessionProvider } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
 const lato = Lato({ subsets: ["latin"], weight: ["100", "300", "400"] });
 
@@ -21,8 +22,8 @@ export default function RootLayout({
   params: any;
 }>) {
   return (
-    <html lang="en">
-      <body className={lato.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn(lato.className, "bg-white dark:bg-[#313131]")}>
         <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"

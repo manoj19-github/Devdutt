@@ -15,7 +15,7 @@ export default async function Home() {
   if (!!respo && respo.user && respo.user && respo.user.workspaces.length === 0)
     redirect("/create-workspace");
   if (!!respo && respo.user && respo.user.workspaces.length >= 1) {
-    redirect(`/work/${respo.user.workspaces[0].id}`);
+    redirect(`/workspace/${respo.user.workspaces[0].id}`);
   }
 
   return (
