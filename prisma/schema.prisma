@@ -55,7 +55,7 @@ model User{
   updatedAt DateTime @updatedAt
   accounts Account[]
   password String?
-  channels String?
+  channelId String?
   is_away Boolean @default(false)
   is_online Boolean @default(false)
   is_busy Boolean @default(false)
@@ -73,18 +73,22 @@ model User{
   type String?
   workspaces Workspaces[]
   members Member[]
+  channels Channel[]
   role UserRole @default(USER)
 }
 
 model Channel{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   name String
-  type String
+  type ChannelType 
   workspaceId String @db.ObjectId
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   messages Message[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   workspace Workspaces @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  @@index([userId])
   @@index([workspaceId])
   
 }
@@ -100,6 +104,7 @@ model Workspaces{
   slug_code String?
   users User @relation(fields: [userId], references: [id], onDelete: Cascade)
   channels Channel[]
+  members Member[]
   @@index([userId])
 }
 
@@ -125,15 +130,20 @@ model passwordResetToken{
 model Member{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   role MemberRole @default(GUEST)
-  userId String @db.ObjectId
-  users User @relation(fields:[userId],references: [id],onDelete:Cascade)
+  workspaceId String @db.ObjectId
+  workspaces Workspaces @relation(fields:[workspaceId],references: [id],onDelete:Cascade)
   messages Message[]
   directMessage DirectMessage[]
+  userId String @db.ObjectId
+  user User @relation(fields:[userId],references: [id],onDelete:Cascade)
   conversationsInitiated Conversation[] @relation("MemberOne")
   conversationsReceived Conversation[] @relation("MemberTwo")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@index([userId])
+  @@index([workspaceId])
 }
+
 
 
 enum ChannelType{

@@ -1,8 +1,10 @@
 "use server";
 
+import { ChannelType, MemberRole, UserRole } from "@prisma/client";
 import { auth } from "../_config/auth.config";
 import { dbConfig } from "../_config/db.config";
 import { getCurrentLoggedInUserServerAction } from "./auth.serverAction";
+import { v4 as UUIDv4 } from "uuid";
 
 export const createWorkSpaceAction = async ({
   image_url,
@@ -33,15 +35,22 @@ export const createWorkSpaceAction = async ({
         slug_code: slug,
         invite_code,
         userId: loggedInUserDetails.user.id,
-      },
-    });
-    await dbConfig.user.update({
-      where: { id: loggedInUserDetails.user.id },
-      data: {
-        workspaces: {
-          connect: {
-            id: workspace.id,
-          },
+        channels: {
+          create: [
+            {
+              name: "general",
+              userId: loggedInUserDetails.user.id,
+              type: ChannelType.TEXT,
+            },
+          ],
+        },
+        members: {
+          create: [
+            {
+              userId: loggedInUserDetails.user.id,
+              role: MemberRole.ADMIN,
+            },
+          ],
         },
       },
     });

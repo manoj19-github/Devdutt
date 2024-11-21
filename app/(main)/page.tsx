@@ -12,10 +12,10 @@ export default async function Home() {
   console.log("respo: ", respo);
 
   if (!!session && session.user && !session.user.name) return <UserInfoSetup />;
-  if (!!respo && respo.user && respo.user && respo.user.workspaces.length === 0)
+  if (!!respo && respo.user && respo.user && !respo.firstServer)
     redirect("/create-workspace");
-  if (!!respo && respo.user && respo.user.workspaces.length >= 1) {
-    redirect(`/workspace/${respo.user.workspaces[0].id}`);
+  if (!!respo && respo.user && respo.firstServer) {
+    redirect(`/workspace/${respo.firstServer.id}`);
   }
 
   return (

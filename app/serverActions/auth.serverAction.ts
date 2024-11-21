@@ -97,6 +97,7 @@ export const getCurrentLoggedInUserServerAction = async () => {
       return {
         message: "User not found",
         user: null,
+        firstServer: null,
         success: false,
       };
     const user = await dbConfig.user.findUnique({
@@ -107,9 +108,19 @@ export const getCurrentLoggedInUserServerAction = async () => {
         workspaces: true,
       },
     });
+    const firstServer = await dbConfig.workspaces.findFirst({
+      where: {
+        members: {
+          some: {
+            userId: user?.id,
+          },
+        },
+      },
+    });
     return {
       message: "User found successfully",
       user,
+      firstServer,
       success: false,
     };
   } catch (error) {
@@ -118,6 +129,7 @@ export const getCurrentLoggedInUserServerAction = async () => {
       message: "Something went wrong",
       user: null,
       success: false,
+      firstServer: null,
     };
   }
 };
