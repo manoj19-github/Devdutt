@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.9.0",
+    "@hookform/resolvers": "^3.9.1",
     "@next-auth/prisma-adapter": "^0.4.4-canary.81",
     "@prisma/client": "^4.13.0",
     "@radix-ui/react-dialog": "^1.1.2",
@@ -33,7 +33,7 @@
     "nodemailer": "^6.9.14",
     "react": "^18",
     "react-dom": "^18",
-    "react-hook-form": "^7.52.2",
+    "react-hook-form": "^7.53.2",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.2.1",
     "slugify": "^1.6.6",

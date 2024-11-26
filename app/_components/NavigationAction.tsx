@@ -2,14 +2,19 @@
 import { Plus } from "lucide-react";
 import React, { FC } from "react";
 import ActionTooltip from "./ActionTooltip";
+import { useModalStore } from "@/hooks/useModalStore";
 
 type NavigationActionProps = {};
 const NavigationAction: FC<NavigationActionProps> = (): JSX.Element => {
+  const { onOpen } = useModalStore();
   return (
     <div>
       <ActionTooltip side="right" align="center" label={"Add a server"}>
         <button className="group flex items-center">
-          <div className="flex mx-2 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-emerald-500 ">
+          <div
+            onClick={() => onOpen("createServer")}
+            className="flex mx-2 h-[48px] w-[48px] rounded-[24px] group-hover:rounded-[16px] transition-all overflow-hidden items-center justify-center bg-background dark:bg-neutral-700 group-hover:bg-emerald-500 "
+          >
             <Plus
               className="group-hover:text-white text-emerald-500 transition"
               size={25}

@@ -1,17 +1,25 @@
+import { Workspaces } from "@prisma/client";
 import { create } from "zustand";
 
-export type ModalType = "createServer" | "editServer";
+export type ModalType = "createServer" | "editServer" | "invite";
+
+interface ModalData {
+  workspace?: Workspaces;
+}
 
 interface ModalStore {
   type: ModalType | null;
   isOpen: boolean;
-  onOpen: (type: ModalType) => void;
+  data: ModalData;
+  onOpen: (type: ModalType, data?: ModalData) => void;
   onClose: () => void;
 }
 
 export const useModalStore = create<ModalStore>((set) => ({
   type: null,
   isOpen: false,
-  onOpen: (type: ModalType) => set(() => ({ type, isOpen: true })),
+  data: {},
+  onOpen: (type: ModalType, data = {}) =>
+    set(() => ({ type, isOpen: true, data })),
   onClose: () => set(() => ({ isOpen: false })),
 }));

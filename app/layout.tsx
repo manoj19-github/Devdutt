@@ -6,6 +6,7 @@ import ToasterProvider from "@/providers/ToasterProvider";
 import PageLoader from "@/components/PageLoader";
 import { SessionProvider } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import ModalProvider from "@/providers/ModalProvider";
 
 const lato = Lato({ subsets: ["latin"], weight: ["100", "300", "400"] });
 
@@ -32,7 +33,9 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <ToasterProvider />
+            <ModalProvider />
             <PageLoader />
+
             {children}
           </ThemeProvider>
         </SessionProvider>
