@@ -1,6 +1,8 @@
 "use client";
 import CreateServerModal from "@/components/modals/CreateServerModal";
+import EditWorkspaceModal from "@/components/modals/EditWorkspaceModal";
 import InviteMemberModal from "@/components/modals/InviteMemberModal";
+import MemberModel from "@/components/modals/MemberModel";
 import useIsMounted from "@/hooks/useIsMounted";
 import React, { FC, Fragment } from "react";
 
@@ -12,6 +14,8 @@ const ModalProvider: FC<ModalProviderProps> = (): JSX.Element => {
     <Fragment>
       <CreateServerModal />
       <InviteMemberModal />
+      <EditWorkspaceModal />
+      <MemberModel />
     </Fragment>
   );
 };

@@ -38,14 +38,16 @@ import { createWorkSpaceAction } from "@/app/serverActions/createWorkSpace.serve
 import toast from "react-hot-toast";
 import slugify from "slugify";
 import { useAPPLoader } from "@/store/useAPPLoader";
+import { editWorkSpaceAction } from "@/app/serverActions/editServer.serverAction";
 
-type CreateServerModalProps = {};
-const CreateServerModal: FC<CreateServerModalProps> = (): JSX.Element => {
-  const { type, isOpen, onClose } = useModalStore();
+type EditWorkspaceModalProps = {};
+const EditWorkspaceModal: FC<EditWorkspaceModalProps> = (): JSX.Element => {
+  const { type, isOpen, onClose, data } = useModalStore();
   const appLoader = useAPPLoader();
+
   const [stepCounter, setStepCounter] = useState<number>(1);
   const router = useRouter();
-  const isModalOpen = isOpen && type === "createWorkspace";
+  const isModalOpen = isOpen && type === "editWorkspace";
   const formHandler = useForm({
     resolver: zodResolver(CreateServerformSchema),
     defaultValues: {
@@ -65,21 +67,19 @@ const CreateServerModal: FC<CreateServerModalProps> = (): JSX.Element => {
     console.log(values);
 
     try {
-      const slug = slugify(values.name);
-      const invite_code = uuid();
       appLoader.startLoader();
-      const response = await createWorkSpaceAction({
+      const response = await editWorkSpaceAction({
         name: values.name,
-        slug,
-        invite_code,
         image_url: values.imageUrl ?? "",
+        workspaceId: data?.workspace?.id || "",
       });
       console.log("response >>>>>>>>>>>>>>>>> ", response);
       handleClose();
 
       if (response?.success && response?.workspace) {
-        toast.success("Workspace created successfully");
+        toast.success("Workspace updated successfully");
         router.replace(`/workspace/${response.workspace.id}`);
+        router.refresh();
       } else {
         toast.error(`${response?.message || "Error creating workspace"}`);
       }
@@ -97,6 +97,12 @@ const CreateServerModal: FC<CreateServerModalProps> = (): JSX.Element => {
   useEffect(() => {
     if (!isModalOpen) setStepCounter(1);
   }, [stepCounter]);
+  useEffect(() => {
+    if (data?.workspace) {
+      formHandler.setValue("name", data.workspace.name);
+      formHandler.setValue("imageUrl", data.workspace?.avatar || "");
+    }
+  }, [data.workspace]);
 
   return (
     <Dialog onOpenChange={handleClose} open={isModalOpen}>
@@ -179,6 +185,7 @@ const CreateServerModal: FC<CreateServerModalProps> = (): JSX.Element => {
                 {stepCounter === 2 ? (
                   <Button
                     type="submit"
+                    disabled={appLoader.loading}
                     onClick={formHandler.handleSubmit(onSubmitHandler)}
                   >
                     Submit
@@ -208,4 +215,4 @@ const CreateServerModal: FC<CreateServerModalProps> = (): JSX.Element => {
   );
 };
 
-export default CreateServerModal;
+export default EditWorkspaceModal;

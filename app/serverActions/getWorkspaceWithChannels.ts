@@ -14,8 +14,7 @@ export const getWorkspaceWithchannels = async ({
   try {
     const session = await auth();
     const loggedInUserDetails = await getCurrentLoggedInUserServerAction();
-    console.log("loggedInUserDetails: ", loggedInUserDetails);
-    console.log("session: ", session);
+
     if (loggedInUserDetails.user === null || !session || !session.user)
       return {
         message: "you are not logged in ",
@@ -48,7 +47,6 @@ export const getWorkspaceWithchannels = async ({
       workspace,
     };
   } catch (err) {
-    console.log(err);
     return {
       message: "something went wrong ",
       success: false,

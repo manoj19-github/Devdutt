@@ -117,11 +117,17 @@ export const getCurrentLoggedInUserServerAction = async () => {
         },
       },
     });
+    const memberResponse = await dbConfig.member.findFirst({
+      where: {
+        AND: [{ userId: user?.id }, { workspaceId: firstServer?.id }],
+      },
+    });
     return {
       message: "User found successfully",
       user,
+      member: memberResponse,
       firstServer,
-      success: false,
+      success: true,
     };
   } catch (error) {
     console.log("error: ", error);

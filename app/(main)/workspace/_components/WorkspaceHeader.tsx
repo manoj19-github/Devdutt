@@ -8,7 +8,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { useModalStore } from "@/hooks/useModalStore";
-import { WorkspaceWithMembersWithProfiles } from "@/types";
+import { UserWithWorkspaces, WorkspaceWithMembersWithProfiles } from "@/types";
 import { MemberRole, Workspaces } from "@prisma/client";
 
 import {
@@ -26,14 +26,18 @@ import React, { FC, Fragment } from "react";
 type WorkspaceHeaderProps = {
   workspace: WorkspaceWithMembersWithProfiles;
   role?: MemberRole;
+  loggedInUser?: UserWithWorkspaces;
 };
 const WorkspaceHeader: FC<WorkspaceHeaderProps> = ({
   workspace,
   role,
+  loggedInUser,
 }): JSX.Element => {
-  const { onClose, onOpen, isOpen } = useModalStore();
+  const { onClose, onOpen, isOpen, data } = useModalStore();
   const IsAdmin = role === MemberRole.ADMIN;
   const IsModerator = role === MemberRole.MODERATOR || IsAdmin;
+  console.log("loggedInUser >>>>>>>>>> ", loggedInUser);
+  console.log("modal details <<<<<<<<<<<<<<< ", data);
 
   return (
     <Fragment>
@@ -47,7 +51,9 @@ const WorkspaceHeader: FC<WorkspaceHeaderProps> = ({
         <DropdownMenuContent className="w-56 text-xs font-medium text-black dark:text-neutral-400 space-y-[2px] ">
           {IsModerator ? (
             <DropdownMenuItem
-              onClick={() => onOpen("invite", { workspace })}
+              onClick={() =>
+                onOpen("invite", { workspace, currUser: loggedInUser })
+              }
               className="text-indigo-600 dark:text-indigo-400 px-3 py-2 text-sm cursor-pointer "
             >
               Invite People
@@ -57,7 +63,10 @@ const WorkspaceHeader: FC<WorkspaceHeaderProps> = ({
             <></>
           )}
           {IsAdmin ? (
-            <DropdownMenuItem className=" px-3 py-2 text-sm cursor-pointer ">
+            <DropdownMenuItem
+              onClick={() => onOpen("editWorkspace", { workspace })}
+              className=" px-3 py-2 text-sm cursor-pointer "
+            >
               Workspace Settings
               <Settings className="size-4 ml-auto" />
             </DropdownMenuItem>
@@ -65,7 +74,12 @@ const WorkspaceHeader: FC<WorkspaceHeaderProps> = ({
             <></>
           )}
           {IsAdmin ? (
-            <DropdownMenuItem className=" px-3 py-2 text-sm cursor-pointer ">
+            <DropdownMenuItem
+              onClick={() =>
+                onOpen("members", { workspace, currUser: loggedInUser })
+              }
+              className=" px-3 py-2 text-sm cursor-pointer "
+            >
               Manage Members
               <Users className="size-4 ml-auto" />
             </DropdownMenuItem>

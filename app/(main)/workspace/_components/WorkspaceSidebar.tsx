@@ -47,6 +47,7 @@ const WorkspaceSidebar: FC<WorkspaceSidebarProps> = async ({
       <WorkspaceHeader
         workspace={workspaceResponse.workspace}
         role={loggedInUserRole}
+        loggedInUser={respo.user}
       />
     </div>
   );

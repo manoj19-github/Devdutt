@@ -20,8 +20,7 @@ export const createWorkSpaceAction = async ({
   try {
     const session = await auth();
     const loggedInUserDetails = await getCurrentLoggedInUserServerAction();
-    console.log("loggedInUserDetails: ", loggedInUserDetails);
-    console.log("session: ", session);
+
     if (loggedInUserDetails.user === null)
       return {
         message: "you are not logged in ",
@@ -60,7 +59,6 @@ export const createWorkSpaceAction = async ({
       workspace,
     };
   } catch (error) {
-    console.log(error);
     return {
       message: "workspace not created",
       success: false,

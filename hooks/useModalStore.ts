@@ -1,10 +1,16 @@
+import { UserWithWorkspaces, WorkspaceWithMembersWithProfiles } from "@/types";
 import { Workspaces } from "@prisma/client";
 import { create } from "zustand";
 
-export type ModalType = "createServer" | "editServer" | "invite";
+export type ModalType =
+  | "createWorkspace"
+  | "editWorkspace"
+  | "invite"
+  | "members";
 
 interface ModalData {
-  workspace?: Workspaces;
+  workspace?: WorkspaceWithMembersWithProfiles;
+  currUser?: UserWithWorkspaces;
 }
 
 interface ModalStore {
