@@ -21,7 +21,12 @@ export const createWorkSpaceAction = async ({
     const session = await auth();
     const loggedInUserDetails = await getCurrentLoggedInUserServerAction();
 
-    if (loggedInUserDetails.user === null)
+    if (
+      !session ||
+      !session.user === null ||
+      !loggedInUserDetails ||
+      loggedInUserDetails.user === null
+    )
       return {
         message: "you are not logged in ",
         success: false,
@@ -32,6 +37,7 @@ export const createWorkSpaceAction = async ({
         avatar: image_url,
         name,
         slug_code: slug,
+
         invite_code,
         userId: loggedInUserDetails.user.id,
         channels: {

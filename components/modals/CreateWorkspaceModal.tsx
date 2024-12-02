@@ -39,8 +39,8 @@ import toast from "react-hot-toast";
 import slugify from "slugify";
 import { useAPPLoader } from "@/store/useAPPLoader";
 
-type CreateServerModalProps = {};
-const CreateServerModal: FC<CreateServerModalProps> = (): JSX.Element => {
+type CreateWorkspaceModalProps = {};
+const CreateWorkspaceModal: FC<CreateWorkspaceModalProps> = (): JSX.Element => {
   const { type, isOpen, onClose } = useModalStore();
   const appLoader = useAPPLoader();
   const [stepCounter, setStepCounter] = useState<number>(1);
@@ -80,6 +80,7 @@ const CreateServerModal: FC<CreateServerModalProps> = (): JSX.Element => {
       if (response?.success && response?.workspace) {
         toast.success("Workspace created successfully");
         router.replace(`/workspace/${response.workspace.id}`);
+        router.refresh();
       } else {
         toast.error(`${response?.message || "Error creating workspace"}`);
       }
@@ -208,4 +209,4 @@ const CreateServerModal: FC<CreateServerModalProps> = (): JSX.Element => {
   );
 };
 
-export default CreateServerModal;
+export default CreateWorkspaceModal;

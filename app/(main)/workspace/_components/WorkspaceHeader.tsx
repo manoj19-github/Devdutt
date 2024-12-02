@@ -87,7 +87,12 @@ const WorkspaceHeader: FC<WorkspaceHeaderProps> = ({
             <></>
           )}
           {IsModerator ? (
-            <DropdownMenuItem className=" px-3 py-2 text-sm cursor-pointer ">
+            <DropdownMenuItem
+              className=" px-3 py-2 text-sm cursor-pointer "
+              onClick={() =>
+                onOpen("createChannel", { workspace, currUser: loggedInUser })
+              }
+            >
               Create Channel
               <PlusCircle className="size-4 ml-auto" />
             </DropdownMenuItem>
@@ -96,7 +101,12 @@ const WorkspaceHeader: FC<WorkspaceHeaderProps> = ({
           )}
           {IsModerator ? <DropdownMenuSeparator /> : <></>}
           {IsAdmin ? (
-            <DropdownMenuItem className=" px-3 py-2 text-rose-500 text-sm cursor-pointer ">
+            <DropdownMenuItem
+              onClick={() =>
+                onOpen("deleteWorkspace", { workspace, currUser: loggedInUser })
+              }
+              className=" px-3 py-2 text-rose-500 text-sm cursor-pointer "
+            >
               Delete Workspace
               <Trash className="size-4 ml-auto" />
             </DropdownMenuItem>
@@ -104,7 +114,12 @@ const WorkspaceHeader: FC<WorkspaceHeaderProps> = ({
             <></>
           )}
           {!IsAdmin ? (
-            <DropdownMenuItem className=" px-3 py-2 text-rose-500 text-sm cursor-pointer ">
+            <DropdownMenuItem
+              onClick={() =>
+                onOpen("leaveWorkspace", { workspace, currUser: loggedInUser })
+              }
+              className=" px-3 py-2 text-rose-500 text-sm cursor-pointer "
+            >
               Leave Workspace
               <LogOut className="size-4 ml-auto" />
             </DropdownMenuItem>

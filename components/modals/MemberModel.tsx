@@ -141,7 +141,7 @@ const MemberModel: FC<MemberModelProps> = (): JSX.Element => {
         </div>
         <div>
           <ScrollArea className="mt-4 max-h-[420px] pr-2">
-            {workspace?.members.map((member) => (
+            {workspace?.members?.map((member) => (
               <div
                 key={member.id}
                 className="flex items-center py-2 gap-x-2 mb-4 border-b border-zinc-100 dark:border-zinc-700"

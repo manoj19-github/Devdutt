@@ -28,6 +28,7 @@ type InviteMemberModalProps = {};
 const InviteMemberModal: FC<InviteMemberModalProps> = (): JSX.Element => {
   const { type, isOpen, onClose, data, onOpen } = useModalStore();
   const [copied, setCopied] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const origin = useOriginHandler();
   const appLoader = useAPPLoader();
@@ -49,7 +50,8 @@ const InviteMemberModal: FC<InviteMemberModalProps> = (): JSX.Element => {
 
   const onNew = async () => {
     try {
-      appLoader.startLoader();
+      // appLoader.startLoader();
+      setLoading(true);
       const response = await changeInviteCodeService({
         workspaceId: workspace?.id || "",
         loggedInUserId: data.currUser?.id || "",
@@ -61,9 +63,13 @@ const InviteMemberModal: FC<InviteMemberModalProps> = (): JSX.Element => {
     } catch (error) {
       console.log("error : ", error);
     } finally {
-      appLoader.stopLoader();
+      setLoading(false);
+      // appLoader.stopLoader();
     }
   };
+  useEffect(() => {
+    if (!isModalOpen) setLoading(false);
+  }, []);
 
   return (
     <Dialog onOpenChange={handleClose} open={isModalOpen}>
@@ -105,9 +111,7 @@ const InviteMemberModal: FC<InviteMemberModalProps> = (): JSX.Element => {
             >
               Generate a new link
               <RefreshCw
-                className={`size-4 ml-2 ${
-                  appLoader.loading ? `animate-spin` : ``
-                }`}
+                className={`size-4 ml-2 ${loading ? `animate-spin` : ``}`}
               />
             </Button>
           </div>

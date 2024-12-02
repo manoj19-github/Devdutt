@@ -149,6 +149,16 @@ export async function DELETE(
           },
         },
       },
+      include: {
+        members: {
+          include: {
+            user: true,
+          },
+          orderBy: {
+            role: "asc",
+          },
+        },
+      },
     });
     return NextResponse.json(
       {

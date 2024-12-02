@@ -33,7 +33,7 @@ const WorkspaceSidebar: FC<WorkspaceSidebarProps> = async ({
     (channel) => channel.type === ChannelType.AUDIO
   );
   const videoChannels = workspaceResponse.workspace.channels.filter(
-    (channel) => channel.type === ChannelType.VIDEOa
+    (channel) => channel.type === ChannelType.VIDEO
   );
   const members = workspaceResponse.workspace.members.filter(
     (member) => member.userId !== respo.user?.id
