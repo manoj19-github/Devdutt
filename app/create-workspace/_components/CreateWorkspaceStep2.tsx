@@ -38,6 +38,7 @@ const CreateWorkspaceStep2: FC<CreateWorkspaceStep2Props> = (): JSX.Element => {
       } else {
         toast.error(`${response?.message || "Error creating workspace"}`);
       }
+      router.refresh();
     } catch (error) {
       // Handle the error here
       console.error("Error creating workspace:", error);
@@ -98,7 +99,7 @@ const CreateWorkspaceStep2: FC<CreateWorkspaceStep2Props> = (): JSX.Element => {
             createWorkStepValues.name.trim().length < 3
           }
         >
-          <Typography component={"p"}>
+          <Typography component={"p"} className="dark:text-white/85">
             {createWorkStepValues.imageUrl ? `Submit` : `Skip for now`}
           </Typography>
         </Button>

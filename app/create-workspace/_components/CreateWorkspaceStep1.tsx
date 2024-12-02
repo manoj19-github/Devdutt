@@ -37,7 +37,9 @@ const CreateWorkspaceStep1: FC<CreateWorkspaceStep1Props> = (): JSX.Element => {
               createWorkStepValues.name.trim().length < 3
             }
           >
-            <Typography component={"p"}>Next</Typography>
+            <Typography component={"p"} className="dark:text-white">
+              Next
+            </Typography>
           </Button>
         </fieldset>
       </form>
