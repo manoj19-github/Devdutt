@@ -2,10 +2,13 @@ import { auth } from "@/app/_config/auth.config";
 import { getCurrentLoggedInUserServerAction } from "@/app/serverActions/auth.serverAction";
 import { getAllOfMyWorkspaceById } from "@/app/serverActions/getWorkspaceById.serverAction";
 import { getWorkspaceWithchannels } from "@/app/serverActions/getWorkspaceWithChannels";
-import { ChannelType } from "@prisma/client";
+import { ChannelType, MemberRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import React, { FC } from "react";
 import WorkspaceHeader from "./WorkspaceHeader";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
+import WorkspaceSearchBar from "./WorkspaceSearchBar";
+import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
 
 type WorkspaceSidebarProps = {
   workspaceId: string;
@@ -41,6 +44,18 @@ const WorkspaceSidebar: FC<WorkspaceSidebarProps> = async ({
   const loggedInUserRole = workspaceResponse.workspace.members.find(
     (member) => member.userId === respo.user?.id
   )?.role;
+  const IconMapper = {
+    [ChannelType.TEXT]: <Hash className="size-4 mr-2" />,
+    [ChannelType.VIDEO]: <Video className="size-4 mr-2" />,
+    [ChannelType.AUDIO]: <Mic className="size-4 mr-2" />,
+  };
+  const RoleIconMapper = {
+    [MemberRole.GUEST]: null,
+    [MemberRole.MODERATOR]: (
+      <ShieldCheck className="size-4 mr-2 text-indigo-500" />
+    ),
+    [MemberRole.ADMIN]: <ShieldAlert className="size-4 mr-2 text-indigo-500" />,
+  };
 
   return (
     <div className="flex flex-col h-full text-primary w-full dark:bg-[#2b2d31] bg-[#e2e3e4] ">
@@ -49,6 +64,50 @@ const WorkspaceSidebar: FC<WorkspaceSidebarProps> = async ({
         role={loggedInUserRole}
         loggedInUser={respo.user}
       />
+      <ScrollArea className="flex-1 px-3">
+        <div className="mt-2">
+          <WorkspaceSearchBar
+            data={[
+              {
+                label: "Text Channels",
+                type: "channel",
+                data: textChannels?.map((self) => ({
+                  id: self.id,
+                  name: self.name,
+                  Icon: IconMapper[self.type],
+                })),
+              },
+              {
+                label: "Voice Channels",
+                type: "channel",
+                data: audioChannels?.map((self) => ({
+                  id: self.id,
+                  name: self.name,
+                  Icon: IconMapper[self.type],
+                })),
+              },
+              {
+                label: "Video Channels",
+                type: "channel",
+                data: videoChannels?.map((self) => ({
+                  id: self.id,
+                  name: self.name,
+                  Icon: IconMapper[self.type],
+                })),
+              },
+              {
+                label: "Members",
+                type: "member",
+                data: members?.map((self) => ({
+                  id: self.id,
+                  name: self.user.name ?? "",
+                  Icon: RoleIconMapper[self.role],
+                })),
+              },
+            ]}
+          />
+        </div>
+      </ScrollArea>
     </div>
   );
 };
