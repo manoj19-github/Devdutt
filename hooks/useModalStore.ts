@@ -1,5 +1,5 @@
 import { UserWithWorkspaces, WorkspaceWithMembersWithProfiles } from "@/types";
-import { Workspaces } from "@prisma/client";
+import { Channel, ChannelType, Workspaces } from "@prisma/client";
 import { create } from "zustand";
 
 export type ModalType =
@@ -9,11 +9,15 @@ export type ModalType =
   | "members"
   | "createChannel"
   | "leaveWorkspace"
-  | "deleteWorkspace";
+  | "deleteWorkspace"
+  | "deleteChannel"
+  | "editChannel";
 
 interface ModalData {
-  workspace?: WorkspaceWithMembersWithProfiles;
-  currUser?: UserWithWorkspaces;
+  workspace?: WorkspaceWithMembersWithProfiles | null;
+  currUser?: UserWithWorkspaces | null;
+  channelType?: ChannelType | null;
+  channel?: Channel | null;
 }
 
 interface ModalStore {

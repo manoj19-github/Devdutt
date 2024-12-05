@@ -1,6 +1,8 @@
 "use client";
 import ActionTooltip from "@/app/_components/ActionTooltip";
+import { useModalStore } from "@/hooks/useModalStore";
 import { cn } from "@/lib/utils";
+import { UserWithWorkspaces, WorkspaceWithMembersWithProfiles } from "@/types";
 import { Channel, ChannelType, MemberRole, Workspaces } from "@prisma/client";
 import { Edit, Hash, Mic, Trash, Video, Lock } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
@@ -8,8 +10,9 @@ import React, { FC } from "react";
 
 type WorkspaceChannelProps = {
   channel: Channel;
-  workspace: Workspaces | null;
+  workspace: WorkspaceWithMembersWithProfiles | null;
   role: MemberRole | undefined;
+  loggedInUser?: UserWithWorkspaces | null;
 };
 
 const iconMap = {
@@ -21,9 +24,12 @@ const WorkspaceChannel: FC<WorkspaceChannelProps> = ({
   channel,
   workspace,
   role,
+  loggedInUser,
 }): JSX.Element => {
   const params = useParams();
   const router = useRouter();
+  const { onOpen, data } = useModalStore();
+  console.log("data: 32 ", data);
   const Icon = iconMap[channel.type];
   const handleClick = () => {
     if (!workspace || !role) {
@@ -52,10 +58,28 @@ const WorkspaceChannel: FC<WorkspaceChannelProps> = ({
       {channel?.name !== "general" && role !== MemberRole.GUEST && (
         <div className="ml-auto flex items-center gap-x-2">
           <ActionTooltip label="Edit Channel" align={"end"}>
-            <Edit className="size-4 hidden group-hover:block text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition-all" />
+            <Edit
+              onClick={() =>
+                onOpen("editChannel", {
+                  channel,
+                  currUser: loggedInUser,
+                  workspace: workspace,
+                })
+              }
+              className="size-4 hidden group-hover:block text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition-all"
+            />
           </ActionTooltip>
           <ActionTooltip label="Delete Channel" align={"end"}>
-            <Trash className="size-4 hidden group-hover:block text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition-all" />
+            <Trash
+              onClick={() =>
+                onOpen("deleteChannel", {
+                  channel,
+                  currUser: loggedInUser,
+                  workspace: workspace,
+                })
+              }
+              className="size-4 hidden group-hover:block text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition-all"
+            />
           </ActionTooltip>
         </div>
       )}

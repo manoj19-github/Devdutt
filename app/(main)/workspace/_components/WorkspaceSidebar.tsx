@@ -12,6 +12,7 @@ import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import WorkspaceSection from "./WorkspaceSection";
 import WorkspaceChannel from "./WorkspaceChannel";
+import WorkspaceMembers from "./WorkspaceMembers";
 
 type WorkspaceSidebarProps = {
   workspaceId: string;
@@ -120,13 +121,89 @@ const WorkspaceSidebar: FC<WorkspaceSidebarProps> = async ({
               sectionType={"channels"}
               workspace={workspaceResponse.workspace}
             />
-            {workspaceResponse.workspace &&
-              textChannels?.map((channel) => (
-                <WorkspaceChannel
-                  key={channel.id}
-                  channel={channel}
+            <div className="space-y-[2px]">
+              {workspaceResponse.workspace &&
+                textChannels?.map((channel) => (
+                  <WorkspaceChannel
+                    key={channel.id}
+                    channel={channel}
+                    workspace={workspaceResponse.workspace}
+                    role={loggedInUserRole}
+                    loggedInUser={respo.user}
+                  />
+                ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {!!workspaceResponse.workspace && !!audioChannels?.length ? (
+          <div className="mb-2">
+            <WorkspaceSection
+              label={"Audio Channels"}
+              role={loggedInUserRole}
+              channelType={ChannelType.AUDIO}
+              sectionType={"channels"}
+              workspace={workspaceResponse.workspace}
+            />
+            <div className="space-y-[2px]">
+              {workspaceResponse.workspace &&
+                audioChannels?.map((channel) => (
+                  <WorkspaceChannel
+                    key={channel.id}
+                    channel={channel}
+                    workspace={workspaceResponse.workspace}
+                    role={loggedInUserRole}
+                    loggedInUser={respo.user}
+                  />
+                ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {!!workspaceResponse.workspace && !!videoChannels?.length ? (
+          <div className="mb-2">
+            <WorkspaceSection
+              label={"Video Channels"}
+              role={loggedInUserRole}
+              channelType={ChannelType.VIDEO}
+              sectionType={"channels"}
+              workspace={workspaceResponse.workspace}
+            />
+            <div className="space-y-[2px]">
+              {workspaceResponse.workspace &&
+                videoChannels?.map((channel) => (
+                  <WorkspaceChannel
+                    key={channel.id}
+                    channel={channel}
+                    workspace={workspaceResponse.workspace}
+                    role={loggedInUserRole}
+                    loggedInUser={respo.user}
+                  />
+                ))}
+            </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {!!workspaceResponse.workspace &&
+        !!workspaceResponse.workspace?.members?.length ? (
+          <div className="mb-2">
+            <WorkspaceSection
+              label={"Members"}
+              role={loggedInUserRole}
+              sectionType={"members"}
+              workspace={workspaceResponse.workspace}
+            />
+            {workspaceResponse &&
+              !!workspaceResponse.workspace &&
+              !!workspaceResponse.workspace?.members &&
+              workspaceResponse.workspace.members?.map((member) => (
+                <WorkspaceMembers
+                  key={member.id}
+                  member={member}
                   workspace={workspaceResponse.workspace}
-                  role={loggedInUserRole}
                 />
               ))}
           </div>

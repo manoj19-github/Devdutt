@@ -14,7 +14,7 @@ export const changeInviteCodeServerAction = async ({
   try {
     const session = await auth();
     const loggedInUserDetails = await getCurrentLoggedInUserServerAction();
-    if (loggedInUserDetails.user === null)
+    if (loggedInUserDetails.user === null || !session || !session.user === null)
       return {
         message: "you are not logged in ",
         success: false,

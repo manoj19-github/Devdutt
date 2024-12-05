@@ -50,14 +50,14 @@ import { CreateChannelFormSchema } from "@/formSchema/createChannel.formSchema";
 import { ChannelType } from "@prisma/client";
 import { createChannelServerAction } from "@/app/serverActions/createChannel.serverAction";
 
-type CreateChannelProps = {};
-const CreateChannelModal: FC<CreateChannelProps> = (): JSX.Element => {
+type EditChannelModalProps = {};
+const EditChannelModal: FC<EditChannelModalProps> = (): JSX.Element => {
   const { type, isOpen, onClose, data, onOpen } = useModalStore();
   console.log("data:  56", data);
   const appLoader = useAPPLoader();
 
   const router = useRouter();
-  const isModalOpen = isOpen && type === "createChannel";
+  const isModalOpen = isOpen && type === "editChannel";
   const formHandler = useForm({
     resolver: zodResolver(CreateChannelFormSchema),
     defaultValues: {
@@ -129,18 +129,15 @@ const CreateChannelModal: FC<CreateChannelProps> = (): JSX.Element => {
     // }
   };
   useEffect(() => {
-    if (isModalOpen) {
-      if (data.channelType)
-        formHandler.setValue("type", data.channelType as any);
-      else formHandler.setValue("type", ChannelType.TEXT as any);
-    } else {
-      formHandler.reset();
+    if (data?.channel && isModalOpen) {
+      formHandler.setValue("name", data.channel.name);
+      formHandler.setValue("type", data.channel.type as any);
     }
-  }, [isModalOpen, data]);
+  }, [data, isModalOpen]);
   return (
     <Dialog onOpenChange={handleClose} open={isModalOpen}>
       <DialogContent className="sm:max-w-[525px]">
-        <Typography className=" text-3xl">Create Channel</Typography>
+        <Typography className=" text-3xl">Edit Channel</Typography>
 
         <div>
           <Form {...formHandler}>
@@ -168,7 +165,7 @@ const CreateChannelModal: FC<CreateChannelProps> = (): JSX.Element => {
                   <FormItem>
                     <FormLabel>Channel type</FormLabel>
                     <Select
-                      defaultValue={data?.channelType || ChannelType.TEXT}
+                      defaultValue={data?.channel?.type || ChannelType.TEXT}
                       disabled={appLoader.loading}
                       onValueChange={(value) => {
                         field.onChange(value);
@@ -212,4 +209,4 @@ const CreateChannelModal: FC<CreateChannelProps> = (): JSX.Element => {
   );
 };
 
-export default CreateChannelModal;
+export default EditChannelModal;

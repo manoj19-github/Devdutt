@@ -11,7 +11,7 @@ type WorkspaceSectionProps = {
   role?: MemberRole;
   sectionType: "members" | "channels";
   channelType?: ChannelType;
-  workspace?: WorkspaceWithMembersWithProfiles;
+  workspace?: WorkspaceWithMembersWithProfiles | null;
 };
 const WorkspaceSection: FC<WorkspaceSectionProps> = ({
   label,
@@ -30,7 +30,7 @@ const WorkspaceSection: FC<WorkspaceSectionProps> = ({
       {role !== MemberRole.GUEST && sectionType === "channels" ? (
         <ActionTooltip label="Create Channel" side="top" align={"center"}>
           <button
-            onClick={() => onOpen("createChannel", { workspace })}
+            onClick={() => onOpen("createChannel", { workspace, channelType })}
             className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-400 dark:hover:text-zinc-300 transition-all"
           >
             <Plus className="size-4" />
@@ -40,7 +40,7 @@ const WorkspaceSection: FC<WorkspaceSectionProps> = ({
         <></>
       )}
       {role === MemberRole.ADMIN && sectionType === "members" ? (
-        <ActionTooltip label="Create Channel" side="top" align={"center"}>
+        <ActionTooltip label="Manage Members" side="top" align={"center"}>
           <button
             onClick={() => onOpen("members", { workspace })}
             className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-400 dark:hover:text-zinc-300 transition-all"
