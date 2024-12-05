@@ -9,6 +9,9 @@ import WorkspaceHeader from "./WorkspaceHeader";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import WorkspaceSearchBar from "./WorkspaceSearchBar";
 import { Hash, Mic, ShieldAlert, ShieldCheck, Video } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import WorkspaceSection from "./WorkspaceSection";
+import WorkspaceChannel from "./WorkspaceChannel";
 
 type WorkspaceSidebarProps = {
   workspaceId: string;
@@ -54,7 +57,7 @@ const WorkspaceSidebar: FC<WorkspaceSidebarProps> = async ({
     [MemberRole.MODERATOR]: (
       <ShieldCheck className="size-4 mr-2 text-indigo-500" />
     ),
-    [MemberRole.ADMIN]: <ShieldAlert className="size-4 mr-2 text-indigo-500" />,
+    [MemberRole.ADMIN]: <ShieldAlert className="size-4 mr-2 text-rose-500" />,
   };
 
   return (
@@ -107,6 +110,29 @@ const WorkspaceSidebar: FC<WorkspaceSidebarProps> = async ({
             ]}
           />
         </div>
+        <Separator className="bg-zinc-300 dark:bg-zinc-700 rounded-md my-2" />
+        {!!workspaceResponse.workspace && !!textChannels?.length ? (
+          <div className="mb-2">
+            <WorkspaceSection
+              label={"Text Channels"}
+              role={loggedInUserRole}
+              channelType={ChannelType.TEXT}
+              sectionType={"channels"}
+              workspace={workspaceResponse.workspace}
+            />
+            {workspaceResponse.workspace &&
+              textChannels?.map((channel) => (
+                <WorkspaceChannel
+                  key={channel.id}
+                  channel={channel}
+                  workspace={workspaceResponse.workspace}
+                  role={loggedInUserRole}
+                />
+              ))}
+          </div>
+        ) : (
+          <></>
+        )}
       </ScrollArea>
     </div>
   );

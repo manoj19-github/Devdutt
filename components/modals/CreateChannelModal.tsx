@@ -53,6 +53,7 @@ import { createChannelServerAction } from "@/app/serverActions/createChannel.ser
 type CreateChannelProps = {};
 const CreateChannelModal: FC<CreateChannelProps> = (): JSX.Element => {
   const { type, isOpen, onClose, data, onOpen } = useModalStore();
+  console.log("data: ", data);
   const appLoader = useAPPLoader();
 
   const router = useRouter();
@@ -83,10 +84,13 @@ const CreateChannelModal: FC<CreateChannelProps> = (): JSX.Element => {
         type: values.type,
         workspace_id: data.workspace?.id ?? "",
       });
+      console.log("response: create channel ", response);
+      router.refresh();
       if (response && response?.success && response?.workspace)
         onOpen("createChannel", {
           workspace: response.workspace,
         });
+      onClose();
       response?.success
         ? toast.success(response.message)
         : toast.error(response?.message);
@@ -124,7 +128,13 @@ const CreateChannelModal: FC<CreateChannelProps> = (): JSX.Element => {
     //   appLoader.stopLoader();
     // }
   };
-
+  useEffect(() => {
+    if (isModalOpen) {
+      formHandler.setValue("type", ChannelType.TEXT);
+    } else {
+      formHandler.reset();
+    }
+  }, [isModalOpen]);
   return (
     <Dialog onOpenChange={handleClose} open={isModalOpen}>
       <DialogContent className="sm:max-w-[525px]">
@@ -156,6 +166,7 @@ const CreateChannelModal: FC<CreateChannelProps> = (): JSX.Element => {
                   <FormItem>
                     <FormLabel>Channel type</FormLabel>
                     <Select
+                      defaultValue={ChannelType.TEXT}
                       disabled={appLoader.loading}
                       onValueChange={(value) => {
                         field.onChange(value);

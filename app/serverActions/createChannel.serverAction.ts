@@ -19,7 +19,7 @@ export const createChannelServerAction = async ({
   try {
     if (!workspace_id)
       return {
-        message: "Workspace is not required",
+        message: "Workspace is  required",
         success: false,
         workspace: null,
       };
