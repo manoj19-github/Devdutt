@@ -54,7 +54,7 @@ const WorkspaceChannel: FC<WorkspaceChannelProps> = ({
           <ActionTooltip label="Edit Channel" align={"end"}>
             <Edit className="size-4 hidden group-hover:block text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition-all" />
           </ActionTooltip>
-          <ActionTooltip label="Edit Channel" align={"end"}>
+          <ActionTooltip label="Delete Channel" align={"end"}>
             <Trash className="size-4 hidden group-hover:block text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition-all" />
           </ActionTooltip>
         </div>
