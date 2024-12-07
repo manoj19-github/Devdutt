@@ -35,7 +35,7 @@ const WorkspaceChannel: FC<WorkspaceChannelProps> = ({
     if (!workspace || !role) {
       return;
     }
-    router.push(`/workspace/${workspace.id}/channel/${channel.id}`);
+    router.push(`/workspace/${workspace.id}/channels/${channel.id}`);
   };
   return (
     <button
@@ -43,7 +43,7 @@ const WorkspaceChannel: FC<WorkspaceChannelProps> = ({
         "group px-2 py-2 rounded-md flex items-center gap-x-2 w-full hover:bg-zinc-700/10 dark:hover:bg-zinc-700/50 transition-all mb-1",
         params?.channelId === channel.id && "bg-zinc-700/20 dark:bg-zinc-700"
       )}
-      onClick={() => {}}
+      onClick={handleClick}
     >
       <Icon className="size-5 flex-shrink text-zinc-500 dark:text-zinc-400 " />
       <p
@@ -59,25 +59,29 @@ const WorkspaceChannel: FC<WorkspaceChannelProps> = ({
         <div className="ml-auto flex items-center gap-x-2">
           <ActionTooltip label="Edit Channel" align={"end"}>
             <Edit
-              onClick={() =>
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 onOpen("editChannel", {
                   channel,
                   currUser: loggedInUser,
                   workspace: workspace,
-                })
-              }
+                });
+              }}
               className="size-4 hidden group-hover:block text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition-all"
             />
           </ActionTooltip>
           <ActionTooltip label="Delete Channel" align={"end"}>
             <Trash
-              onClick={() =>
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
                 onOpen("deleteChannel", {
                   channel,
                   currUser: loggedInUser,
                   workspace: workspace,
-                })
-              }
+                });
+              }}
               className="size-4 hidden group-hover:block text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 dark:hover:text-zinc-300 transition-all"
             />
           </ActionTooltip>

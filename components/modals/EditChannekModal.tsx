@@ -49,6 +49,7 @@ import { useAPPLoader } from "@/store/useAPPLoader";
 import { CreateChannelFormSchema } from "@/formSchema/createChannel.formSchema";
 import { ChannelType } from "@prisma/client";
 import { createChannelServerAction } from "@/app/serverActions/createChannel.serverAction";
+import { updateChannelServerAction } from "@/app/serverActions/updateChannel.serverAction";
 
 type EditChannelModalProps = {};
 const EditChannelModal: FC<EditChannelModalProps> = (): JSX.Element => {
@@ -79,10 +80,11 @@ const EditChannelModal: FC<EditChannelModalProps> = (): JSX.Element => {
 
     try {
       appLoader.startLoader();
-      const response = await createChannelServerAction({
+      const response = await updateChannelServerAction({
         name: values.name,
-        type: values.type,
-        workspace_id: data.workspace?.id ?? "",
+        channelType: values.type as ChannelType,
+        workspaceId: data.workspace?.id ?? "",
+        channelId: data.channel?.id ?? "",
       });
       console.log("response: create channel ", response);
       router.refresh();

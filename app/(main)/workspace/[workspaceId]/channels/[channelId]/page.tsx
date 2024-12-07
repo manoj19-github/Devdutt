@@ -1,16 +1,19 @@
 import { auth } from "@/app/_config/auth.config";
 import { getCurrentLoggedInUserServerAction } from "@/app/serverActions/auth.serverAction";
-import { findFirstMemberByIdServerAction } from "@/app/serverActions/findFirstMemberById";
+import { findChannelByIdServerAction } from "@/app/serverActions/findChannelAndMemberByIdServerAction";
 import { findWorkspaceByIdServerAction } from "@/app/serverActions/findWorkspaceById";
 import { redirect } from "next/navigation";
 import React, { FC } from "react";
+import ChatHeader from "../_components/ChatHeader";
 
-type WorkspaceIdPageProps = {
+type ChannelIdMainProps = {
   params: {
     workspaceId: string;
+    channelId: string;
   };
 };
-const WorkspaceIdPage: FC<WorkspaceIdPageProps> = async ({
+
+const ChannelIdMain: FC<ChannelIdMainProps> = async ({
   params,
 }): Promise<JSX.Element> => {
   const session = await auth();
@@ -22,20 +25,27 @@ const WorkspaceIdPage: FC<WorkspaceIdPageProps> = async ({
     session.user === null
   )
     redirect("/auth/login");
-  const selectedWorkspace = await findWorkspaceByIdServerAction({
+  const channelAndMember = await findChannelByIdServerAction({
+    channelId: params.channelId,
     workspaceId: params.workspaceId,
     userId: loggedInUserDetails.user.id,
   });
-  console.log("selectedWorkspace: ", selectedWorkspace);
-
   if (
-    selectedWorkspace.initialChannel === null ||
-    selectedWorkspace.initialChannel?.name !== "general"
+    !channelAndMember ||
+    !channelAndMember.channel ||
+    !channelAndMember.member
   )
-    return <></>;
-  return redirect(
-    `/workspace/${params.workspaceId}/channels/${selectedWorkspace.initialChannel.id}`
+    redirect("/");
+
+  return (
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-full ">
+      <ChatHeader
+        workspaceId={params.workspaceId}
+        name={channelAndMember.channel.name}
+        type={"channel"}
+      />
+    </div>
   );
 };
 
-export default WorkspaceIdPage;
+export default ChannelIdMain;

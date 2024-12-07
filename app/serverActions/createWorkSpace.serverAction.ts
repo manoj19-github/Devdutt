@@ -23,7 +23,7 @@ export const createWorkSpaceAction = async ({
 
     if (
       !session ||
-      !session.user === null ||
+      session.user === null ||
       !loggedInUserDetails ||
       loggedInUserDetails.user === null
     )

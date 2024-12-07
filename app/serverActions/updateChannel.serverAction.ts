@@ -6,20 +6,30 @@ import { getCurrentLoggedInUserServerAction } from "./auth.serverAction";
 import { CreateChannelFormSchema } from "@/formSchema/createChannel.formSchema";
 import { NextResponse } from "next/server";
 
-export const deleteChannelAction = async ({
+export const updateChannelServerAction = async ({
   channelId,
   workspaceId,
+  name,
+  channelType,
 }: {
   channelId: string;
   workspaceId: string;
+  name: string;
+  channelType: ChannelType;
 }) => {
   try {
+    if (!!name && name.toLowerCase() === "general")
+      return {
+        message: "You can't delete general channel",
+        success: false,
+        workspace: null,
+      };
     if (!channelId || !workspaceId)
-      return NextResponse.json({
+      return {
         message: "Invalid request",
         success: false,
         workspace: null,
-      });
+      };
     const session = await auth();
     const loggedInUserDetails = await getCurrentLoggedInUserServerAction();
     if (loggedInUserDetails.user === null || !session || session.user === null)
@@ -79,21 +89,42 @@ export const deleteChannelAction = async ({
       },
       data: {
         channels: {
-          delete: {
-            id: channelId,
+          update: {
+            where: {
+              id: channelId,
+            },
+            data: {
+              name,
+              type: channelType,
+            },
+          },
+        },
+      },
+      include: {
+        channels: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
+        members: {
+          include: {
+            user: true,
+          },
+          orderBy: {
+            role: "asc",
           },
         },
       },
     });
     return {
-      message: "Channel deleted successfully",
+      message: "Channel updated successfully",
       success: true,
       workspace: updatedWorkspace,
     };
   } catch (error) {
     console.log(error);
     return {
-      message: "channel not deleted",
+      message: "channel not updated",
       success: false,
       workspace: null,
     };
