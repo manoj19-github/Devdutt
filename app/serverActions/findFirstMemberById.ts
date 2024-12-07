@@ -29,6 +29,9 @@ export const findFirstMemberByIdServerAction = async ({
         workspaceId: workspaceId,
         userId: userId,
       },
+      include: {
+        user: true,
+      },
     });
 
     return {
