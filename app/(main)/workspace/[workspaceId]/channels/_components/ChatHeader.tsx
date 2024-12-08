@@ -1,3 +1,4 @@
+import SocketIndicator from "@/app/_components/SocketIndicator";
 import MobileToggle from "@/lib/MobileToggle";
 import { Hash, Menu } from "lucide-react";
 import Image from "next/image";
@@ -33,6 +34,9 @@ const ChatHeader: FC<ChatHeaderProps> = ({
       <p className="font-semibold text-md text-black dark:text-white ">
         {name}
       </p>
+      <div className="ml-auto flex items-center">
+        <SocketIndicator />
+      </div>
     </div>
   );
 };

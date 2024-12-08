@@ -5,6 +5,8 @@ import { findWorkspaceByIdServerAction } from "@/app/serverActions/findWorkspace
 import { redirect } from "next/navigation";
 import React, { FC } from "react";
 import ChatHeader from "../_components/ChatHeader";
+import ChatInput from "../_components/ChatInput";
+import { channel } from "diagnostics_channel";
 
 type ChannelIdMainProps = {
   params: {
@@ -42,6 +44,16 @@ const ChannelIdMain: FC<ChannelIdMainProps> = async ({
       <ChatHeader
         workspaceId={params.workspaceId}
         name={channelAndMember.channel.name}
+        type={"channel"}
+      />
+      <div className="flex-1 h-full flex ">Future Message</div>
+      <ChatInput
+        apiUrl={"/api/socket/messages"}
+        query={{
+          channelId: params.channelId,
+          workspaceId: params.workspaceId,
+        }}
+        name={channel.name}
         type={"channel"}
       />
     </div>
