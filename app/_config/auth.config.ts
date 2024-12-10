@@ -25,7 +25,7 @@ export const {
   },
   events: {
     async linkAccount({ user }) {
-      await linkAccountService(user)
+      await linkAccountService(user);
     },
   },
   callbacks: {
@@ -42,7 +42,7 @@ export const {
       console.log("SIGN IN DATA : ", { user, account, profile });
       try {
         if (!!account && account.provider === "credentials") return true;
-       const response = await socialLoginService({ user, account, profile });
+        const response = await socialLoginService({ user, account, profile });
         return true;
       } catch (error) {
         console.log("error in sign in : ", error);
@@ -63,9 +63,7 @@ export const {
     },
     async jwt({ token, user }) {
       // console.log("token in jwt : ", token);
-    return token;
-
-    
+      return token;
     },
   },
   // adapter: PrismaAdapter(dbConfig) as any,

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import React, { FC } from "react";
 import ChatHeader from "../_components/ChatHeader";
 import ChatInput from "../_components/ChatInput";
-import { channel } from "diagnostics_channel";
+
 
 type ChannelIdMainProps = {
   params: {
@@ -53,8 +53,9 @@ const ChannelIdMain: FC<ChannelIdMainProps> = async ({
           channelId: params.channelId,
           workspaceId: params.workspaceId,
         }}
-        name={channel.name}
+        name={channelAndMember.channel.name}
         type={"channel"}
+        loggedInUserDetails={loggedInUserDetails}
       />
     </div>
   );

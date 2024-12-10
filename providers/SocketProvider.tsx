@@ -1,4 +1,5 @@
 "use client";
+import { checkSocketConnectionHandler } from "@/app/_services/chat.service";
 import {
   createContext,
   FC,
@@ -36,6 +37,11 @@ export const SocketProvider: FC<SocketProviderProps> = ({ children }) => {
         addTrailingSlash: false,
       }
     );
+    checkSocketConnectionHandler({
+      successCallback: (data) => {
+        console.log("socker result >>>>>>>>>>>> ", data);
+      },
+    });
 
     socketInstance.on("connect", () => {
       setIsConnected(true);

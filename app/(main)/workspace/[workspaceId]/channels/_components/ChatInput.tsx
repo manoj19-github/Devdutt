@@ -5,12 +5,16 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-react";
+import { Plus, SendHorizontal, Smile } from "lucide-react";
+import { sendMessageHandler } from "@/app/_services/chat.service";
+import { useModalStore } from "@/hooks/useModalStore";
+import EmojiPicker from "../../../_components/EmojiPicker";
 type ChatInputProps = {
   apiUrl: string;
   query: Record<string, any>;
   name: string;
   type: "conversation" | "channel";
+  loggedInUserDetails: any;
 };
 
 const chatInputFormSchema = z.object({
@@ -22,7 +26,9 @@ const ChatInput: FC<ChatInputProps> = ({
   query,
   name,
   type,
+  loggedInUserDetails,
 }): JSX.Element => {
+  const { onOpen } = useModalStore();
   const formHandler = useForm<z.infer<typeof chatInputFormSchema>>({
     defaultValues: {
       content: "",
@@ -30,17 +36,28 @@ const ChatInput: FC<ChatInputProps> = ({
     resolver: zodResolver(chatInputFormSchema),
   });
   const isLoading = formHandler.formState.isSubmitting;
-  const onSubmitHandler = async (value: z.infer<typeof formHandler>) => {
+  const onSubmitHandler = async (
+    value: z.infer<typeof chatInputFormSchema>
+  ) => {
     console.log("====================================");
-    console.log("val;ue >>>>>> ", value);
+    console.log("hit onsubmit");
     console.log("====================================");
+    sendMessageHandler({
+      apiUrl,
+      query,
+      content: value.content,
+      loggedInUserDetails,
+      successCallback: (data) => {
+        console.log("success message: ", data);
+      },
+    });
   };
+  console.log("====================================");
+  console.log("error form ", formHandler.formState.errors);
+  console.log("====================================");
   return (
     <Form {...formHandler}>
-      <form
-        onSubmit={formHandler.handleSubmit(onSubmitHandler)}
-        className="bottom-0 fixed w-[80.7%]"
-      >
+      <form className="bottom-0 fixed w-[80.7%]">
         <FormField
           control={formHandler.control}
           name="content"
@@ -50,15 +67,35 @@ const ChatInput: FC<ChatInputProps> = ({
                 <div className="relative p-3 pb-4 ">
                   <button
                     type="button"
+                    onClick={() =>
+                      onOpen("messageFile", {
+                        apiUrl,
+                        query,
+                        loggedInUserDetails,
+                      })
+                    }
                     className="absolute top-5 left-8 h-[24px] w-[24px] bg-zinc-500 dark:bg-zinc-600 dark:hover:bg-zinc-300 transition-all rounded-full p-1 flex items-center justify-center  "
                   >
                     <Plus className="size-4 text-white dark:text-[#313338]" />
                   </button>
                   <Input
                     disabled={isLoading}
+                    placeholder={`Message ${
+                      type === "conversation" ? name : `# ${name}`
+                    }`}
                     {...field}
                     className="px-12 py-5 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                   />
+                  <div className="absolute top-5 right-[2%] ">
+                    <SendHorizontal
+                      className="size-5 cursor-pointer"
+                      onClick={formHandler.handleSubmit(onSubmitHandler)}
+                    />
+                  </div>
+                  <div className="absolute top-5 right-[4%]">
+                    {/* <Smile className="size-5 cursor-pointer" /> */}
+                    <EmojiPicker onChange={(value) => {}} />
+                  </div>
                 </div>
               </FormControl>
             </FormItem>

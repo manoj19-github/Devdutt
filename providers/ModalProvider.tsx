@@ -8,6 +8,7 @@ import EditWorkspaceModal from "@/components/modals/EditWorkspaceModal";
 import InviteMemberModal from "@/components/modals/InviteMemberModal";
 import LeaveWorkspaceModal from "@/components/modals/LeaveWorkspaceModal";
 import MemberModel from "@/components/modals/MemberModel";
+import MessageFileModal from "@/components/modals/MessageFileModal";
 import useIsMounted from "@/hooks/useIsMounted";
 import React, { FC, Fragment } from "react";
 
@@ -26,6 +27,7 @@ const ModalProvider: FC<ModalProviderProps> = (): JSX.Element => {
       <DeleteWorkspaceModal />
       <DeleteChannelModal />
       <EditChannelModal />
+      <MessageFileModal />
     </Fragment>
   );
 };
