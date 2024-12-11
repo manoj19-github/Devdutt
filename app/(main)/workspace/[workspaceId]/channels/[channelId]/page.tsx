@@ -6,7 +6,7 @@ import { redirect } from "next/navigation";
 import React, { FC } from "react";
 import ChatHeader from "../_components/ChatHeader";
 import ChatInput from "../_components/ChatInput";
-
+import ChatMessages from "../_components/ChatMessages";
 
 type ChannelIdMainProps = {
   params: {
@@ -40,13 +40,27 @@ const ChannelIdMain: FC<ChannelIdMainProps> = async ({
     redirect("/");
 
   return (
-    <div className="bg-white dark:bg-[#313338] flex flex-col h-full ">
+    <div className="bg-white dark:bg-transparent flex flex-col h-full ">
       <ChatHeader
         workspaceId={params.workspaceId}
         name={channelAndMember.channel.name}
         type={"channel"}
       />
-      <div className="flex-1 h-full flex ">Future Message</div>
+      <ChatMessages
+        name={channelAndMember.channel.name}
+        member={channelAndMember.member}
+        chatId={channelAndMember.channel.id}
+        apiUrl={"/api/messages"}
+        socketUrl={"/api/socket/messages"}
+        socketQuery={{
+          channelId: channelAndMember.channel.id,
+          workspaceId: channelAndMember.channel.workspaceId,
+        }}
+        paramKey={"channelId"}
+        paramValue={channelAndMember.channel.id}
+        type={"channel"}
+        loggedInUserDetails={loggedInUserDetails}
+      />
       <ChatInput
         apiUrl={"/api/socket/messages"}
         query={{

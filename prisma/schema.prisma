@@ -155,7 +155,7 @@ enum ChannelType{
 
 model Message {
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  content String 
+  content String? 
   fileUrl String?
   memberId String
   member Member @relation(fields:[memberId],references: [id],onDelete:Cascade) 

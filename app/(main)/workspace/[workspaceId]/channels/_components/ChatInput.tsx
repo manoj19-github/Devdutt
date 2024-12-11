@@ -9,6 +9,7 @@ import { Plus, SendHorizontal, Smile } from "lucide-react";
 import { sendMessageHandler } from "@/app/_services/chat.service";
 import { useModalStore } from "@/hooks/useModalStore";
 import EmojiPicker from "../../../_components/EmojiPicker";
+import { useRouter } from "next/navigation";
 type ChatInputProps = {
   apiUrl: string;
   query: Record<string, any>;
@@ -28,6 +29,7 @@ const ChatInput: FC<ChatInputProps> = ({
   type,
   loggedInUserDetails,
 }): JSX.Element => {
+  const router = useRouter();
   const { onOpen } = useModalStore();
   const formHandler = useForm<z.infer<typeof chatInputFormSchema>>({
     defaultValues: {
@@ -49,6 +51,8 @@ const ChatInput: FC<ChatInputProps> = ({
       loggedInUserDetails,
       successCallback: (data) => {
         console.log("success message: ", data);
+        formHandler.reset();
+        router.refresh();
       },
     });
   };
@@ -94,7 +98,11 @@ const ChatInput: FC<ChatInputProps> = ({
                   </div>
                   <div className="absolute top-5 right-[4%]">
                     {/* <Smile className="size-5 cursor-pointer" /> */}
-                    <EmojiPicker onChange={(value) => {}} />
+                    <EmojiPicker
+                      onChange={(value: string) => {
+                        field.onChange(`${field.value} ${value}`);
+                      }}
+                    />
                   </div>
                 </div>
               </FormControl>

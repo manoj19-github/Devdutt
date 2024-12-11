@@ -4,6 +4,7 @@ export const sendMessageHandler = async ({
   apiUrl,
   query,
   content,
+  fileUrl,
   successCallback,
   loggedInUserDetails,
   finallyCallback,
@@ -11,8 +12,9 @@ export const sendMessageHandler = async ({
 }: {
   query?: Record<string, any>;
   apiUrl?: string;
+  fileUrl?: string | null;
   loggedInUserDetails?: any;
-  content: string;
+  content?: string;
   successCallback?: (args?: any) => void;
   errorCallback?: (args?: any) => void;
   finallyCallback?: (args?: any) => void;
@@ -26,6 +28,7 @@ export const sendMessageHandler = async ({
       method: "POST",
       body: JSON.stringify({
         content,
+        fileUrl,
         loggedInUserDetails,
       }),
       headers: {

@@ -8,6 +8,8 @@ import { SessionProvider } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import ModalProvider from "@/providers/ModalProvider";
 import { SocketProvider } from "@/providers/SocketProvider";
+import QueryProvider from "@/providers/QueryProvider";
+import { ReactNode } from "react";
 
 const lato = Lato({ subsets: ["latin"], weight: ["100", "300", "400"] });
 
@@ -20,7 +22,7 @@ export default function RootLayout({
   children,
   params: { session, ...params },
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
   params: any;
 }>) {
   return (
@@ -34,11 +36,13 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <SocketProvider>
-              <ToasterProvider />
-              <ModalProvider />
-              <PageLoader />
+              <QueryProvider>
+                <ToasterProvider />
+                <ModalProvider />
+                <PageLoader />
 
-              {children}
+                {children}
+              </QueryProvider>
             </SocketProvider>
           </ThemeProvider>
         </SessionProvider>

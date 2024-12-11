@@ -54,6 +54,7 @@ type MessageFileModalProps = {};
 const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
   const { type, isOpen, onClose, data } = useModalStore();
   const appLoader = useAPPLoader();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
   const isModalOpen = isOpen && type === "messageFile";
@@ -61,6 +62,7 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
     resolver: zodResolver(attachMessageFileFormSchema),
     defaultValues: {
       imageUrl: "",
+      caption: "",
     },
   });
 
@@ -76,11 +78,13 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
 
     try {
       appLoader.startLoader();
+      setLoading(true);
       sendMessageHandler({
         loggedInUserDetails: data.loggedInUserDetails,
         query: data.query,
         apiUrl: data.apiUrl,
-        content: values.imageUrl,
+        fileUrl: values.imageUrl,
+        content: values.caption,
         successCallback: () => {
           toast.success("File sent successfully");
           handleClose();
@@ -100,6 +104,7 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
       toast.error("Error sending attachment");
     } finally {
       appLoader.stopLoader();
+      setLoading(false);
     }
   };
 
@@ -107,6 +112,7 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
     if (!isModalOpen) {
       formHandler.reset();
       router.refresh();
+      setLoading(false);
     }
   }, []);
 
@@ -180,7 +186,7 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
                   )}
                 </div>
                 <div>
-                  {!appLoader.loading ? (
+                  {!appLoader.loading || !loading ? (
                     <div>
                       <FileUpload
                         endpoint="messageFile"
@@ -191,7 +197,7 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
                           console.log("res", res);
                           formHandler.setValue("imageUrl", res);
                         }}
-                        isLoading={false}
+                        isLoading={loading}
                       />
                     </div>
                   ) : (
@@ -199,15 +205,29 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
                   )}
                 </div>
               </fieldset>
+              <FormField
+                control={formHandler.control}
+                name="caption"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Write your caption</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your Caption" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <div className={cn("flex items-center justify-end")}>
                 <Button
                   type="submit"
+                  disabled={appLoader.loading || loading}
                   onClick={formHandler.handleSubmit(onSubmitHandler)}
                   className="gap-x-2 flex"
                 >
                   <span>Send</span>
-                  {appLoader.loading ? (
+                  {appLoader.loading || loading ? (
                     <Loader2 className="w-4 h-4 text-indigo-500 animate-spin" />
                   ) : (
                     <></>
