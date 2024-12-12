@@ -2,6 +2,7 @@
 import CreateChannelModal from "@/components/modals/CreateChannelModal";
 import CreateServerModal from "@/components/modals/CreateWorkspaceModal";
 import DeleteChannelModal from "@/components/modals/DeleteChannelModal";
+import DeleteMessageModal from "@/components/modals/DeleteMessageModal";
 import DeleteWorkspaceModal from "@/components/modals/DeleteWorkspaceModal";
 import EditChannelModal from "@/components/modals/EditChannekModal";
 import EditWorkspaceModal from "@/components/modals/EditWorkspaceModal";
@@ -28,6 +29,7 @@ const ModalProvider: FC<ModalProviderProps> = (): JSX.Element => {
       <DeleteChannelModal />
       <EditChannelModal />
       <MessageFileModal />
+      <DeleteMessageModal/>
     </Fragment>
   );
 };

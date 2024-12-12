@@ -41,9 +41,7 @@ const ChatInput: FC<ChatInputProps> = ({
   const onSubmitHandler = async (
     value: z.infer<typeof chatInputFormSchema>
   ) => {
-    console.log("====================================");
-    console.log("hit onsubmit");
-    console.log("====================================");
+    formHandler.reset();
     sendMessageHandler({
       apiUrl,
       query,
@@ -51,14 +49,31 @@ const ChatInput: FC<ChatInputProps> = ({
       loggedInUserDetails,
       successCallback: (data) => {
         console.log("success message: ", data);
-        formHandler.reset();
-        router.refresh();
+
+        // router.refresh();
       },
     });
   };
-  console.log("====================================");
-  console.log("error form ", formHandler.formState.errors);
-  console.log("====================================");
+  const KeyDownHandler=(event:any)=>{
+  
+    const content = formHandler.watch("content");
+    if(event.key==="Enter" && event.keyCode===13 && !!content && content.trim().length>0){
+      event.preventDefault();
+      event.stopPropagation();
+      formHandler.reset();
+      sendMessageHandler({
+        apiUrl,
+        query,
+        content,
+        loggedInUserDetails,
+        successCallback: (data) => {
+          console.log("success message: ", data);
+        },
+      });
+
+    }
+
+  }
   return (
     <Form {...formHandler}>
       <form className="bottom-0 fixed w-[80.7%]">
@@ -88,6 +103,7 @@ const ChatInput: FC<ChatInputProps> = ({
                       type === "conversation" ? name : `# ${name}`
                     }`}
                     {...field}
+                    onKeyDown={KeyDownHandler}
                     className="px-12 py-5 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                   />
                   <div className="absolute top-5 right-[2%] ">

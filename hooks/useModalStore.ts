@@ -12,7 +12,9 @@ export type ModalType =
   | "deleteWorkspace"
   | "deleteChannel"
   | "editChannel"
-  | "messageFile";
+  | "messageFile"
+  |"deleteMessage"
+  ;
 
 interface ModalData {
   workspace?: WorkspaceWithMembersWithProfiles | null;
@@ -22,6 +24,7 @@ interface ModalData {
   apiUrl?: string;
   query?: Record<string, any>;
   loggedInUserDetails?: any;
+  messageId?:string;
 }
 
 interface ModalStore {
