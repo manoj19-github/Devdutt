@@ -54,9 +54,9 @@ const WorkspaceSearchBar: FC<WorkspaceSearchBarProps> = ({
   }) => {
     setOpen(false);
     if (type === "channel")
-      return router.push(`/workspace/${params.workspaceId}/channels/${id}`);
+      return router.push(`/workspace/${params?.workspaceId}/channels/${id}`);
 
-    router.push(`/workspace/${params.workspaceId}/conversations/${id}`);
+    router.push(`/workspace/${params?.workspaceId}/conversations/${id}`);
   };
   return (
     <Fragment>
