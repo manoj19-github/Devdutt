@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { SendMailOptions, createTransport } from "nodemailer";
+import { SendMailOptions } from "nodemailer";
 import { dbConfig } from "../../../../_config/db.config";
 import { LoginSchema } from "../../../../../validationSchema/auth.schema";
 import crypto from "crypto";
