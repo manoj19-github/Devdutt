@@ -95,36 +95,33 @@ const ChatMessages: FC<ChatMessagesProps> = ({
     );
   }
   return (
-    <div ref={ChatRef} className="flex-1 flex flex-col max-h-[82vh] overflow-y-auto ">
+    <div
+      ref={ChatRef}
+      className="flex-1 flex flex-col max-h-[82vh] overflow-y-auto "
+    >
       <div className="flex-1 mt-5 " />
-      {
-        !hasNextPage ? (
-          <ChatWelcomeGreet type={type} name={name} />
+      {!hasNextPage ? <ChatWelcomeGreet type={type} name={name} /> : <></>}
+      {hasNextPage ? (
+        <div className="flex justify-center">
+          {isFetchingNextPage ? (
+            <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4" />
+          ) : (
+            <button
+              onClick={() => fetchNextPage()}
+              className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 text-xs my-4 dark:hover:text-zinc-300 transition-all"
+            >
+              Load previous message
+            </button>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
 
-        ):(
-          <></>
-        )
-      }
-      {
-        hasNextPage ? (
-          <div className="flex justify-center">
-            {
-              isFetchingNextPage ? (
-                <Loader2 className="h-6 w-6 text-zinc-500 animate-spin my-4"/>
-              ):(
-                <button onClick={()=>fetchNextPage()} className="text-zinc-500 hover:text-zinc-600 dark:text-zinc-400 text-xs my-4 dark:hover:text-zinc-300 transition-all">Load previous message</button>
-              )
-            }
-          </div>
-        ):(
-          <></>
-        )
-      }
-      
       <div className="flex flex-col-reverse  flex-end mt-2 h-full  ">
         {data?.pages?.map((page, index) => (
           <Fragment key={index}>
-            {page.items?.map((message: MessageWithMemberWithUser) => (
+            {page?.items?.map((message: MessageWithMemberWithUser) => (
               <ChatItem
                 id={message.id}
                 key={message.id}
