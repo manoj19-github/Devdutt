@@ -16,7 +16,7 @@ const NavigationItem: FC<NavigationItemProps> = ({
   name,
 }): JSX.Element => {
   const router = useRouter();
-  const { workspaceId } = useParams();
+  const { workspaceId }: any = useParams();
   const clickHandler = () => {
     router.push(`/workspace/${id}`);
   };
