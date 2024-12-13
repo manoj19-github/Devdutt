@@ -16,6 +16,9 @@ const ioHandler = (req: NextApiRequest, res: NextApiResponseServerIo) => {
       path,
       addTrailingSlash: false,
       pingTimeout: 30000, // 12 seconds
+      connectionStateRecovery: {
+        maxDisconnectionDuration: 10000,
+      },
     });
     res.socket.server.io = io;
   }
