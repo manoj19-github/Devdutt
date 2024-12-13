@@ -5,6 +5,8 @@ import { getOrCreateConversation } from "@/lib/conversation";
 import { redirect } from "next/navigation";
 import React, { FC } from "react";
 import ChatHeader from "../../channels/_components/ChatHeader";
+import ChatMessages from "../../channels/_components/ChatMessages";
+import ChatInput from "../../channels/_components/ChatInput";
 
 type MemberIdMainProps = {
   params: {
@@ -41,12 +43,34 @@ const MemberIdMain: FC<MemberIdMainProps> = async ({
     memberOne.user.id === loggedInUserDetails.user.id ? memberTwo : memberOne;
 
   return (
-    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
+    <div className="bg-white dark:bg-transparent flex flex-col h-full">
       <ChatHeader
         workspaceId={params.workspaceId}
         name={otherMember.user.name ?? ""}
         type={"conversation"}
         imageURL={otherMember.user.image ?? ""}
+      />
+      <ChatMessages
+        name={otherMember.user.name ?? ""}
+        loggedInUserDetails={loggedInUserDetails}
+        apiUrl={"/api/direct-messages"}
+        chatId={conversation.id}
+        socketUrl={"/api/socket/direct-messages"}
+        socketQuery={{
+          conversationId: conversation.id,
+        }}
+        paramKey={"conversationId"}
+        paramValue={conversation.id}
+        type={"conversation"}
+      />
+      <ChatInput
+        apiUrl={"/api/socket/direct-messages"}
+        name={otherMember.user.name ?? ""}
+        query={{
+          conversationId: conversation.id,
+        }}
+        type={"conversation"}
+        loggedInUserDetails={loggedInUserDetails}
       />
     </div>
   );
