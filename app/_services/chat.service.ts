@@ -235,3 +235,43 @@ export const deleteMessageService = async ({
     finallyCallback?.();
   }
 }
+
+export const getMediaToken = async ({
+  successCallback,
+  errorCallback,
+  finallyCallback,
+  chatId,
+  name,
+}: {
+  successCallback?: (args?: any) => void;
+  errorCallback?: (args?: any) => void;
+  finallyCallback?: (args?: any) => void;
+  chatId: string;
+  name: string;
+}) => {
+  try {
+    const url = qs.stringifyUrl({
+      url: `${process.env.NEXT_PUBLIC_CURRENT_ORIGIN}/api/livekit`,
+      query: {
+        room: chatId,
+        username: name,
+      },
+    });
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      successCallback?.(data);
+    } else {
+      errorCallback?.();
+    }
+  } catch (error) {
+    errorCallback?.();
+  } finally {
+    finallyCallback?.();
+  }
+};

@@ -1,3 +1,4 @@
+import ChatVideoButton from "@/app/_components/ChatVideoButton";
 import SocketIndicator from "@/app/_components/SocketIndicator";
 import MobileToggle from "@/lib/MobileToggle";
 import { Hash, Menu } from "lucide-react";
@@ -35,6 +36,7 @@ const ChatHeader: FC<ChatHeaderProps> = ({
         {name}
       </p>
       <div className="ml-auto flex items-center">
+        {type === "conversation" ? <ChatVideoButton /> : <></>}
         <SocketIndicator />
       </div>
     </div>
