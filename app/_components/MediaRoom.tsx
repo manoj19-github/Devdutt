@@ -18,6 +18,7 @@ const MediaRoom: FC<MediaRoomProps> = ({
   video,
   audio,
 }): JSX.Element => {
+  console.log("chatId  in media room ::: ", chatId);
   console.log("loggedInUser>>>>>21media ", loggedInUser);
   const [mediaToken, setMediaToken] = useState<string>("");
   useEffect(() => {

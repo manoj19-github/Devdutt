@@ -35,7 +35,7 @@ export const findConversation = async ({
   memberTwoId: string;
 }) => {
   try {
-    return await dbConfig.conversation.findFirst({
+    let conversation = await dbConfig.conversation.findFirst({
       where: {
         AND: [
           {
@@ -59,6 +59,32 @@ export const findConversation = async ({
         },
       },
     });
+    if (!conversation)
+      conversation = await dbConfig.conversation.findFirst({
+        where: {
+          AND: [
+            {
+              memberOneId: memberTwoId,
+            },
+            {
+              memberTwoId: memberOneId,
+            },
+          ],
+        },
+        include: {
+          memberOne: {
+            include: {
+              user: true,
+            },
+          },
+          memberTwo: {
+            include: {
+              user: true,
+            },
+          },
+        },
+      });
+    return conversation;
   } catch (error) {
     console.log(error);
     return null;

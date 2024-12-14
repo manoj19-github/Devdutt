@@ -76,7 +76,7 @@ const ChatInput: FC<ChatInputProps> = ({
   }
   return (
     <Form {...formHandler}>
-      <form className="bottom-0 fixed w-[80.7%]">
+      <form className="bottom-0 fixed xl:w-[80.7%] md:w-[70%] w-[95%] lg:w-[65%]">
         <FormField
           control={formHandler.control}
           name="content"
@@ -106,13 +106,13 @@ const ChatInput: FC<ChatInputProps> = ({
                     onKeyDown={KeyDownHandler}
                     className="px-12 py-5 bg-zinc-200/90 dark:bg-zinc-700/75 border-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-zinc-600 dark:text-zinc-200"
                   />
-                  <div className="absolute top-5 right-[2%] ">
+                  <div className="absolute top-5 right-[3%] lg:right-[2%] ">
                     <SendHorizontal
                       className="size-5 cursor-pointer"
                       onClick={formHandler.handleSubmit(onSubmitHandler)}
                     />
                   </div>
-                  <div className="absolute top-5 right-[4%]">
+                  <div className="absolute top-5 right-[8%] lg:right-[4%]">
                     {/* <Smile className="size-5 cursor-pointer" /> */}
                     <EmojiPicker
                       onChange={(value: string) => {

@@ -42,6 +42,7 @@ const MemberIdMain: FC<MemberIdMainProps> = async ({
     memberOneId: loggedInUserDetails.member.id,
     memberTwoId: params.memberId,
   });
+  console.log("conversation >>>>>>>>>>>>>>>>>> ", conversation);
   if (!conversation) return redirect(`/workspace/${params.workspaceId}`);
   const { memberOne, memberTwo } = conversation;
   const otherMember =
