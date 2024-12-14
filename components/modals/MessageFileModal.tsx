@@ -34,7 +34,9 @@ import * as zod from "zod";
 import FileUpload from "@/lib/FileUpload";
 import {
   CloudUpload,
+  FileAudio,
   FileIcon,
+  FileVideo2,
   Loader2,
   MoveLeft,
   MoveRight,
@@ -49,6 +51,7 @@ import {
   sendAttachmentHandler,
   sendMessageHandler,
 } from "@/app/_services/chat.service";
+import { log } from "node:console";
 
 type MessageFileModalProps = {};
 const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
@@ -116,6 +119,10 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
     }
   }, []);
 
+  console.log("====================================");
+  console.log("formHandler >>>>>>> ", formHandler.watch("imageUrl"));
+  console.log("====================================");
+
   return (
     <Dialog onOpenChange={handleClose} open={isModalOpen}>
       <DialogContent className="sm:max-w-[525px]">
@@ -150,6 +157,50 @@ const MessageFileModal: FC<MessageFileModalProps> = (): JSX.Element => {
                           alt="logo"
                         />
                       </div>
+                    </div>
+                  ) : formHandler.watch("imageUrl") &&
+                    formHandler.watch("imageUrl").endsWith(".mp4") ? (
+                    <div className="relative flex items-center p-1 mt-2 rounded-md bg-white/10">
+                      <FileVideo2 className="w-16 h-16 fill-indigo-200 stroke-indigo-400" />
+                      <a
+                        href={formHandler.watch("imageUrl")}
+                        download
+                        target={"_blank"}
+                        rel="noreferrer noopener"
+                        className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline "
+                      >
+                        {formHandler.getValues("imageUrl")}
+                      </a>
+                      <button
+                        className="bg-rose-500 text-white p-1 rounded-full absolute -top-2 -right-2 shadow-sm "
+                        type="button"
+                        onClick={() => formHandler.setValue("imageUrl", "")}
+                        disabled={appLoader.loading}
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ) : formHandler.watch("imageUrl") &&
+                    formHandler.watch("imageUrl").endsWith(".mp3") ? (
+                    <div className="relative flex items-center p-1 mt-2 rounded-md bg-white/10">
+                      <FileAudio className="w-16 h-16 fill-indigo-200 stroke-indigo-400" />
+                      <a
+                        href={formHandler.watch("imageUrl")}
+                        download
+                        target={"_blank"}
+                        rel="noreferrer noopener"
+                        className="ml-2 text-sm text-indigo-500 dark:text-indigo-400 hover:underline "
+                      >
+                        {formHandler.getValues("imageUrl")}
+                      </a>
+                      <button
+                        className="bg-rose-500 text-white p-1 rounded-full absolute -top-2 -right-2 shadow-sm "
+                        type="button"
+                        onClick={() => formHandler.setValue("imageUrl", "")}
+                        disabled={appLoader.loading}
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
                   ) : (
                     <></>

@@ -71,6 +71,59 @@
   animation: animtspin 1s linear infinite;
 }
 
+@layer utilities{
+  .subtitle-1{
+    @apply text-[16px] leading-[24px] font-medium;
+  }
+  .subtitle-2{
+    @apply text-[14px] leading-[20px] font-medium;
+  }
+  .subtitle-3{
+    @apply text-[12px] leading-[18px] font-semibold;
+  }
+  .body-1{
+    @apply text-[16px] leading-[24px] font-normal;
+  }
+  .body-2{
+    @apply text-[14px] leading-[20px] font-normal;
+  }
+  .button{
+    @apply text-[14px] leading-[20px] font-medium;
+  }
+  .caption{
+    @apply text-[12px] leading-[18px] font-normal;
+  }
+  .overline{
+    @apply text-[10px] leading-[15px] font-medium;
+  }
+  .container{
+    @apply mx-auto max-w-7xl px-4;
+  }
+  .primary-btn{
+    @apply bg-brand hover:bg-brand-100 transition-all rounded-full button !importany; 
+  }
+  .flex-center{
+    @apply flex items-center justify-center;
+  }
+  .shad-no-focus{
+    @apply outline-none ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible
+  }
+
+}
+
+@layer components {
+  .btn {
+    @apply bg-primary text-primary-foreground rounded-md px-4 py-2 shadow-md shadow-primary/50;
+  }
+  .btn:hover {
+    @apply bg-primary/80;
+  }
+  .btn:active {
+    @apply bg-primary/60;
+  }
+}
+
+
 @keyframes animtspin {
   0% {
     transform: rotate(-0deg);

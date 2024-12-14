@@ -46,6 +46,7 @@ const ChannelIdMain: FC<ChannelIdMainProps> = async ({
       <ChatHeader
         workspaceId={params.workspaceId}
         name={channelAndMember.channel.name}
+        channelType={channelAndMember.channel.type}
         type={"channel"}
       />
       {channelAndMember.channel.type === ChannelType.TEXT ? (

@@ -1,5 +1,8 @@
 "use client";
 import * as zod from "zod";
+import Video from "next-video";
+import AudioPlayer from "react-h5-audio-player";
+import "react-h5-audio-player/lib/styles.css";
 import { User, Member, MemberRole } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { updateMessageService } from "@/app/_services/chat.service";
-import { useRouter,useParams } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useModalStore } from "@/hooks/useModalStore";
 type ChatItemProps = {
@@ -78,6 +81,12 @@ const ChatItem: FC<ChatItemProps> = ({
   const canDeleteMessage = !deleted && (isAdmin || isModerator || isOwner);
   const canEditMessage = !deleted && isOwner && !fileUrl;
   const isPDF = fileUrl && fileUrl.endsWith(".pdf");
+  const isAudio =
+    (fileUrl && fileUrl.endsWith(".mp3")) ||
+    (fileUrl && fileUrl.endsWith(".wav"));
+  const isVideo =
+    (fileUrl && fileUrl.endsWith(".mp4")) ||
+    (fileUrl && fileUrl.endsWith(".mov"));
   const isImage =
     fileUrl &&
     !isPDF &&
@@ -107,11 +116,12 @@ const ChatItem: FC<ChatItemProps> = ({
     });
   };
 
-  const onMemberClick=()=>{
-    if(member.id===currentMember.id) return;
-    router.push(`/workspace/${params?.workspaceId??""}/conversations/${member?.id}`)
-
-  }
+  const onMemberClick = () => {
+    if (member.id === currentMember.id) return;
+    router.push(
+      `/workspace/${params?.workspaceId ?? ""}/conversations/${member?.id}`
+    );
+  };
   useEffect(() => {
     FormHandler.reset({
       content: content ?? "",
@@ -130,13 +140,16 @@ const ChatItem: FC<ChatItemProps> = ({
     <div className="relative group flex items-center hover:bg-black/5 p-3 transition-all w-full ">
       <div className="group flex gap-x-2 items-start w-full">
         <div className="cursor-pointer hover:drop-shadow-md transition-all">
-          <div className="w-8 h-8 rounded-full overflow-hidden relative cursor-pointer" >
+          <div className="w-8 h-8 rounded-full overflow-hidden relative cursor-pointer">
             <Image fill src={member.user.image || "/avatar.png"} alt="user" />
           </div>
           <div className="flex flex-col w-full">
             <div className="flex items-center gap-x-2">
               <div className="flex items-center">
-                <p onClick={onMemberClick} className="font-semibold text-sm hover:underline transition-all cursor-pointer ">
+                <p
+                  onClick={onMemberClick}
+                  className="font-semibold text-sm hover:underline transition-all cursor-pointer "
+                >
                   {member.user.name}
                 </p>
                 <ActionTooltip label={member.role} align="end">
@@ -163,10 +176,8 @@ const ChatItem: FC<ChatItemProps> = ({
                   />
                 </a>
                 <p className="mt-1 w-48">
-                  {
-                    !deleted?`${content}`:`This message has been deleted`
-                  }
-                  </p>
+                  {!deleted ? `${content}` : `This message has been deleted`}
+                </p>
               </div>
             ) : isPDF ? (
               <a
@@ -180,6 +191,15 @@ const ChatItem: FC<ChatItemProps> = ({
                   <p className="w-48 mt-1 text-center">{content}</p>
                 </div>
               </a>
+            ) : isVideo ? (
+              <Video src={fileUrl} className="mt-2 h-72 w-72" />
+            ) : isAudio ? (
+              <AudioPlayer
+                src={fileUrl}
+                className="mt-2 h-48 w-48"
+                onPlay={(e) => console.log("onPlay")}
+                // other props here
+              />
             ) : (
               <></>
             )}
@@ -191,9 +211,7 @@ const ChatItem: FC<ChatItemProps> = ({
                     "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
                 )}
               >
-             {
-                    !deleted?`${content}`:`This message has been deleted`
-                  }
+                {!deleted ? `${content}` : `This message has been deleted`}
                 {isUpdated && !deleted ? (
                   <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
                     (edited)
