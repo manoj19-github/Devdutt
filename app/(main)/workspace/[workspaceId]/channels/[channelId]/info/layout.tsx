@@ -46,7 +46,12 @@ const InfoLayout: FC<InfoLayoutProps> = async ({
         name={channelAndMember.channel.name}
         type={"channel"}
       />
-      <InfoSidebar />
+      <InfoSidebar
+        params={{
+          workspaceId: params.workspaceId,
+          channelId: channelAndMember.channel.id,
+        }}
+      />
       <section className="flex h-full flex-1 flex-col">
         <div className="main-content">{children}</div>
       </section>
